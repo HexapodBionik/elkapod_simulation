@@ -1,3 +1,4 @@
-[submodule "controllers/universal_controller/MotionPlanning"]
-	path = controllers/universal_controller/MotionPlanning
+[submodule "MotionPlanning"]
+	path = controllers/MotionPlanning
 	url = git@github.com:HexapodBionik/MotionPlanning.git
+	branch = FixInverseKinematics

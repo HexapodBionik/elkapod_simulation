@@ -8,8 +8,8 @@ WorldInfo {
   title "HexapodBasicSim"
 }
 Viewpoint {
-  orientation -0.0014947540416904677 0.821567349348599 0.5701095124576258 0.5746373268563132
-  position -1.4903315408292992 -0.6601406677598767 0.8399080337820457
+  orientation 0.3844375599025793 0.35205683213169175 -0.8533837058941004 1.6020727073488206
+  position -0.25388513364256526 1.247821232834055 1.044588150805813
 }
 TexturedBackground {
 }
@@ -21,6 +21,21 @@ RectangleArena {
 DEF HexapodRobotTest Robot {
   translation 0 0 0.05
   children [
+    DEF HeadTranslation Pose {
+      translation 0 0.15 0
+      children [
+        DEF Head Shape {
+          appearance PBRAppearance {
+            baseColor 0.144442 0.568017 0.833341
+            metalness 0
+          }
+          geometry Cylinder {
+            height 0.06
+            radius 0.03
+          }
+        }
+      ]
+    }
     DEF L6J1 HingeJoint {
       jointParameters HingeJointParameters {
         position 3.14
@@ -34,7 +49,7 @@ DEF HexapodRobotTest Robot {
       ]
       endPoint Solid {
         translation -0.1 -0.15 -1.4268099999999993e-05
-        rotation 0.0005622220406647072 0.7071079684969854 0.7071053703617612 3.1404662348267345
+        rotation 0.0005622220406647018 0.7071079684969854 0.7071053703617612 3.1404662348267345
         children [
           DEF MountServoTransform Pose {
             rotation 1 0 0 -1.5708
@@ -76,7 +91,7 @@ DEF HexapodRobotTest Robot {
               }
             ]
             endPoint Solid {
-              translation 0.06300000000000001 -4.163094952120425e-18 0
+              translation 0.06300000000000001 -5.240473550862772e-18 0
               children [
                 DEF A2_Transform Pose {
                   translation 0.045 0 0
@@ -185,8 +200,8 @@ DEF HexapodRobotTest Robot {
         }
       ]
       endPoint Solid {
-        translation -0.100119 -2.8110905937002093e-19 -1.42681e-05
-        rotation 0.0005622220463405378 0.7071079756357186 0.707105363222997 3.140466234838101
+        translation -0.100119 -7.180457112552314e-19 -1.42681e-05
+        rotation 0.0005622220463405306 0.7071079756357184 0.7071053632229972 3.140466234838101
         children [
           DEF L2MountServoTransform Pose {
             rotation 1 0 0 -1.5708
@@ -228,7 +243,7 @@ DEF HexapodRobotTest Robot {
               }
             ]
             endPoint Solid {
-              translation 0.06300000000000001 -4.1630943817714226e-18 0
+              translation 0.06300000000000001 -5.23795318344269e-18 0
               children [
                 DEF A2_Transform Pose {
                   translation 0.045 0 0
@@ -338,7 +353,7 @@ DEF HexapodRobotTest Robot {
       ]
       endPoint Solid {
         translation -0.0998806 0.15 -1.42681e-05
-        rotation 0.0005622220463405378 0.7071079756357186 0.707105363222997 3.140466234838101
+        rotation 0.0005622220463405447 0.7071079756357186 0.707105363222997 3.140466234838101
         children [
           DEF L2MountServoTransform Pose {
             rotation 1 0 0 -1.5708
@@ -380,7 +395,7 @@ DEF HexapodRobotTest Robot {
               }
             ]
             endPoint Solid {
-              translation 0.06300000000000001 -4.311275944295536e-18 0
+              translation 0.06300000000000001 -5.300841073157004e-18 0
               children [
                 DEF A2_Transform Pose {
                   translation 0.045 0 0
@@ -489,7 +504,7 @@ DEF HexapodRobotTest Robot {
       ]
       endPoint Solid {
         translation 0.1 -0.15 -1.42681e-05
-        rotation 0.9999999999992331 1.2262625356379814e-06 -1.7305524664364949e-07 1.5708000201914338
+        rotation 0.9999999999992331 1.2262625356477944e-06 -1.7305524665346252e-07 1.5708000201914332
         children [
           DEF MountServoTransform Pose {
             rotation 1 0 0 -1.5708
@@ -531,7 +546,7 @@ DEF HexapodRobotTest Robot {
               }
             ]
             endPoint Solid {
-              translation 0.06300000000000001 -4.311275944295536e-18 0
+              translation 0.06300000000000001 -5.291434384136743e-18 0
               children [
                 DEF A2_Transform Pose {
                   translation 0.045 0 0
@@ -639,8 +654,8 @@ DEF HexapodRobotTest Robot {
         }
       ]
       endPoint Solid {
-        translation 0.1 0 -1.42681e-05
-        rotation 0.9999999999992331 1.2262625356379814e-06 -1.7305524664364949e-07 1.5708000201914338
+        translation 0.1 0 -1.4268099999999996e-05
+        rotation 0.9999999999992331 1.2262625356281685e-06 -1.7305524664364954e-07 1.5708000201914332
         children [
           DEF MountServoTransform Pose {
             rotation 1 0 0 -1.5708
@@ -682,7 +697,7 @@ DEF HexapodRobotTest Robot {
               }
             ]
             endPoint Solid {
-              translation 0.06300000000000001 -4.311275944295536e-18 0
+              translation 0.06300000000000001 -7.290964000244083e-18 0
               children [
                 DEF A2_Transform Pose {
                   translation 0.045 0 0
@@ -791,7 +806,7 @@ DEF HexapodRobotTest Robot {
       ]
       endPoint Solid {
         translation 0.1 0.15 -1.42681e-05
-        rotation 0.9999999999992331 1.2262625356379814e-06 -1.7305524664364949e-07 1.5708000201914338
+        rotation 0.9999999999992331 1.2262625356576075e-06 -1.7305524672215398e-07 1.5708000201914332
         children [
           DEF MountServoTransform Pose {
             rotation 1 0 0 -1.5708
@@ -833,7 +848,7 @@ DEF HexapodRobotTest Robot {
               }
             ]
             endPoint Solid {
-              translation 0.06300000000000001 -4.311275944295536e-18 0
+              translation 0.06300000000000001 -4.9845251334003666e-18 0
               children [
                 DEF A2_Transform Pose {
                   translation 0.045 0 0
