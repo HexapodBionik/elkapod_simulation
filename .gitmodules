@@ -1,0 +1,3 @@
+[submodule "controllers/universal_controller/MotionPlanning"]
+	path = controllers/universal_controller/MotionPlanning
+	url = git@github.com:HexapodBionik/MotionPlanning.git
