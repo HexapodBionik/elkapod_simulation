@@ -1,6 +1,7 @@
 from controller import Robot
 from time import time
 import math
+import numpy as np
 
 # Create robot instance.
 robot = Robot()
@@ -42,6 +43,22 @@ class Leg:
         self._offset = offset
         self._leg_name = leg_name
         self._sign = sign
+
+        self.normal_position = True
+
+    def set_angles(self, q: np.ndarray) -> None:
+        q1 = np.deg2rad(q[0])
+        q2 = np.deg2rad(q[1])
+        q3 = np.deg2rad(q[2])
+
+        self._s1.setPosition(self._offset + q1 * self._sign)
+        self._s2.setPosition(q2)
+        self._s3.setPosition(q3)
+
+        if q1 == 0 and q3 == 0:
+            self.normal_position = True
+        else:
+            self.normal_position = False
 
     def __str__(self):
         return self._leg_name
