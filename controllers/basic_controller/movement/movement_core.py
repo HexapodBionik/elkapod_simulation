@@ -1,6 +1,6 @@
 import numpy as np
 
-from ..movement.movement_profiles import MovementProfile, MechatronicGait
+from ..movement.movement_profiles import MovementProfile, MechatronicGait, TripodGait
 from ..connection.connection_mockup import HardwareControllerConnection
 from ..movement.movement_errors import MovementCoreInitializationError
 from MotionPlanning.kinematics.kinematics_solvers import KinematicsSolver
@@ -43,7 +43,7 @@ class MovementCore:
         movement_time = self._step_length / velocity
         self._last_action_time = movement_time
 
-        self._trajectories_generator = MechatronicGait()
+        self._trajectories_generator = TripodGait()
         self._trajectories_generator.generate_trajectories(self._step_length, movement_time)
 
     def execute_trajectories(self, t: float):

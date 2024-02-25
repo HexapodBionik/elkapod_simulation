@@ -2,7 +2,7 @@ from time import time
 import numpy as np
 import math
 from controller import Robot
-from ..simulation.leg import Leg
+from ..simulation.leg_steering import LegSteering
 
 robot = Robot()
 
@@ -36,9 +36,9 @@ servo63 = robot.getDevice("Servo63")
 
 
 
-leg1 = Leg(servo11, servo12, servo13, 0, "l1", -1)
-leg2 = Leg(servo21, servo22, servo23, 0, "l2", -1)
-leg3 = Leg(servo31, servo32, servo33, 0, "l3", -1)
-leg4 = Leg(servo41, servo42, servo43, math.pi, "l4", 1)
-leg5 = Leg(servo51, servo52, servo53, math.pi, "l5", 1)
-leg6 = Leg(servo61, servo62, servo63, math.pi, "l6", 1)
+leg1 = LegSteering(servo11, servo12, servo13, 0, "l1", -1)
+leg2 = LegSteering(servo21, servo22, servo23, 0, "l2", -1)
+leg3 = LegSteering(servo31, servo32, servo33, 0, "l3", -1)
+leg4 = LegSteering(servo41, servo42, servo43, math.pi, "l4", 1)
+leg5 = LegSteering(servo51, servo52, servo53, math.pi, "l5", 1)
+leg6 = LegSteering(servo61, servo62, servo63, math.pi, "l6", 1)

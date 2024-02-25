@@ -2,7 +2,7 @@ from time import time
 import numpy as np
 import math
 from controller import Robot
-from basic_controller.simulation.leg import Leg
+from basic_controller.simulation.leg_steering import LegSteering
 import math
 from basic_controller.connection.connection_mockup import HardwareControllerConnection, robot, timestep
 import threading
@@ -21,6 +21,7 @@ core.init(setup_data.get("movement_core"))
 movement_time = 50
 user_command = False
 velocity = 0.05
+
 
 def simulation():
     global user_command, velocity

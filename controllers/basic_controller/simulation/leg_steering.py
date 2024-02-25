@@ -2,7 +2,7 @@ from controller.motor import Motor
 import numpy as np
 
 
-class Leg:
+class LegSteering:
     def __init__(self, servo1: Motor, servo2: Motor, servo3: Motor, offset, leg_name: str, sign):
         self._s1 = servo1
         self._s2 = servo2
