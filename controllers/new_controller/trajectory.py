@@ -2,18 +2,20 @@ import numpy as np
 
 
 def _pos_without_omega(t: float, tref: float,
-                       cycle_time: float, v: np.ndarray) -> np.ndarray:
+                       cycle_time: float, step_height: float,
+                       v: np.ndarray) -> np.ndarray:
     p0 = 0.25*cycle_time*v
     return np.array([p0[0] - v[0]*tref,
                      p0[1] - v[1]*tref,
                      0. if t <= 0.5*cycle_time else
-                     0.01*np.sqrt(1 - (4*tref /
-                                       cycle_time - 1)**2)])
+                     step_height*np.sqrt(1 - (4*tref /
+                                         cycle_time - 1)**2)])
 
 
 def get_position(t: float, cycle_time: float,
                  leg_no: int, leg_pos: np.ndarray,
-                 v: np.ndarray, omega: float) -> np.ndarray:
+                 step_height: float, v: np.ndarray,
+                 omega: float) -> np.ndarray:
     # Translate coordinate system
     v = np.array([v[0], -v[1]])
 
@@ -33,7 +35,7 @@ def get_position(t: float, cycle_time: float,
 
     if omega == 0.:
         # Handle special case of omega == 0
-        point = _pos_without_omega(t, tref, cycle_time, v)
+        point = _pos_without_omega(t, tref, cycle_time, step_height, v)
     else:
         r_c = np.linalg.norm(v)/omega
         if np.linalg.norm(v) > 0.:
@@ -52,8 +54,8 @@ def get_position(t: float, cycle_time: float,
         point = np.array([r*np.cos(phi_m + omega*tref) - rel_pos[0],
                           r*np.sin(phi_m + omega*tref) - rel_pos[1],
                           0. if t <= 0.5*cycle_time else
-                          0.01*np.sqrt(1 - (4*tref /
-                                            cycle_time - 1)**2)])
+                          step_height*np.sqrt(1 - (4*tref /
+                                              cycle_time - 1)**2)])
 
     if leg_no <= 3:
         # Mirror coordinates for legs 1-3

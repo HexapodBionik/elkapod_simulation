@@ -181,13 +181,19 @@ class WebotsWorker(QObject):
                 ]
                 for leg_no, (leg_pos, leg) in \
                         enumerate(zip(leg_positions, legs), start=1):
-                    pos = get_position(curr_time - t0, 6.,
-                                       leg_no, leg_pos,
-                                       np.array([self.vval *
-                                                 np.cos(self.vdir),
-                                                 self.vval *
-                                                 np.sin(self.vdir)]),
-                                       self.omega)
+                    pos = get_position(
+                        curr_time - t0,  # timepoint
+                        6.,              # cycle duration
+                        leg_no,          # leg number
+                        leg_pos,         # leg position (relative to center
+                                         #               of the corpus)
+                        0.01,            # step_height
+                        np.array([self.vval *           # velocity vector
+                                  np.cos(self.vdir),
+                                  self.vval *
+                                  np.sin(self.vdir)]),
+                        self.omega       # angular velocity
+                    )
                     pos = adjust_leg_spacing(pos, self.leg_spacing)
                     pos = adjust_height(pos, self.height)
                     q = hexapod_kinematics_solver.inverse(pos)
