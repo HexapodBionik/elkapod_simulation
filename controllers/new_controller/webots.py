@@ -1,7 +1,7 @@
 from controller import Robot
 from time import time
 from trajectory import (
-    LegTrajectory,
+    get_position,
     adjust_leg_spacing,
     adjust_height,
 )
@@ -146,20 +146,6 @@ class WebotsWorker(QObject):
         self.vval_signal.connect(self.update_vval)
         self.omega_signal.connect(self.update_omega)
 
-        # Generate trajectories
-        leg_trajectories = []
-        leg_positions = [
-                np.array([self.leg_spacing/2, 0.15]),
-                np.array([self.leg_spacing/2, 0.]),
-                np.array([self.leg_spacing/2, -0.15]),
-                np.array([-self.leg_spacing/2, 0.15]),
-                np.array([-self.leg_spacing/2, 0.]),
-                np.array([-self.leg_spacing/2, -0.15]),
-        ]
-        for i in range(6):
-            trajectory = LegTrajectory(i+1, leg_positions[i], 6.)
-            leg_trajectories.append(trajectory)
-
         # Homing
         pos0g0 = np.array([0.2, 0., -0.1])
         pos0g1 = np.array([0.2, 0., -0.1])
@@ -184,13 +170,24 @@ class WebotsWorker(QObject):
 
             curr_time = time()
             if curr_time - t0 < 6.:
-                for traj, leg in zip(leg_trajectories, legs):
-                    pos = traj.get_position(curr_time - t0,
-                                            np.array([self.vval *
-                                                      np.cos(self.vdir),
-                                                      self.vval *
-                                                      np.sin(self.vdir)]),
-                                            self.omega)
+                # Generate trajectories
+                leg_positions = [
+                        np.array([self.leg_spacing/2, 0.15]),
+                        np.array([self.leg_spacing/2, 0.]),
+                        np.array([self.leg_spacing/2, -0.15]),
+                        np.array([-self.leg_spacing/2, 0.15]),
+                        np.array([-self.leg_spacing/2, 0.]),
+                        np.array([-self.leg_spacing/2, -0.15]),
+                ]
+                for leg_no, (leg_pos, leg) in \
+                        enumerate(zip(leg_positions, legs), start=1):
+                    pos = get_position(curr_time - t0, 6.,
+                                       leg_no, leg_pos,
+                                       np.array([self.vval *
+                                                 np.cos(self.vdir),
+                                                 self.vval *
+                                                 np.sin(self.vdir)]),
+                                       self.omega)
                     pos = adjust_leg_spacing(pos, self.leg_spacing)
                     pos = adjust_height(pos, self.height)
                     q = hexapod_kinematics_solver.inverse(pos)
