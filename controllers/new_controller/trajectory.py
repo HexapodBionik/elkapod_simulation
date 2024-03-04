@@ -1,4 +1,5 @@
 import numpy as np
+from MotionPlanning.kinematics.kinematics_utils import rot_x, rot_y, rot_z
 
 
 def _pos_without_omega(t: float, tref: float,
@@ -45,7 +46,7 @@ def get_position(t: float, cycle_time: float,
         odir = np.array([-vdir[1], vdir[0]])
         center = odir*r_c
 
-        rel_pos = center + leg_pos
+        rel_pos = center + leg_pos[:2]
 
         r = np.sqrt(rel_pos[0]**2 + rel_pos[1]**2)
         phi0 = np.arctan2(rel_pos[1], rel_pos[0])
@@ -71,4 +72,46 @@ def adjust_leg_spacing(pos: np.ndarray, leg_spacing: float):
 
 def adjust_height(pos: np.ndarray, height: float):
     pos[2] -= height
+    return pos
+
+
+def adjust_yaw(pos: np.ndarray, yaw: float,
+               leg_spacing: float,
+               leg_no: int, leg_pos: np.ndarray):
+    if leg_no <= 3:
+        pos[2] += 0.5*leg_spacing*np.tan(yaw)
+        pos = rot_y(-yaw).dot(pos)
+    else:
+        pos[2] -= 0.5*leg_spacing*np.tan(yaw)
+        pos = rot_y(yaw).dot(pos)
+
+    pos[0] += 0.1*(1. - np.cos(yaw))
+
+    return pos
+
+
+def adjust_pitch(pos: np.ndarray, pitch: float, leg_pos: np.ndarray):
+    pos[2] -= leg_pos[2]
+    pos = rot_x(-pitch).dot(pos)
+    pos[2] += leg_pos[2]
+    delta_z = leg_pos[1]*np.tan(pitch) - \
+        (leg_pos[2] + leg_pos[1]*np.tan(pitch))*(np.sin(pitch)**2)
+    delta_y = (leg_pos[2] + leg_pos[1]*np.tan(pitch)) * \
+        np.sin(pitch)*np.cos(pitch)
+
+    pos[1] += delta_y
+    pos[2] += delta_z
+
+    return pos
+
+
+def adjust_roll(pos: np.ndarray, roll: float,
+                leg_no: int, leg_pos: np.ndarray):
+    if leg_no <= 3:
+        pos[0] -= leg_pos[1]*np.sin(roll)
+        pos = rot_z(-roll).dot(pos)
+    else:
+        pos[0] += leg_pos[1]*np.sin(roll)
+        pos = rot_z(roll).dot(pos)
+
     return pos

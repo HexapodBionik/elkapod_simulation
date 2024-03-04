@@ -2,6 +2,9 @@ from controller import Robot
 from time import time
 from trajectory import (
     get_position,
+    adjust_yaw,
+    adjust_pitch,
+    adjust_roll,
     adjust_leg_spacing,
     adjust_height,
 )
@@ -105,6 +108,10 @@ class WebotsWorker(QObject):
     vdir_signal = Signal(int)
     vval_signal = Signal(int)
     omega_signal = Signal(int)
+    yaw_signal = Signal(int)
+    pitch_signal = Signal(int)
+    roll_signal = Signal(int)
+    step_height_signal = Signal(int)
 
     @Slot(int)
     def update_leg_spacing(self, leg_spacing):
@@ -126,6 +133,22 @@ class WebotsWorker(QObject):
     def update_omega(self, omega):
         self.omega = -(omega*2*np.pi/3600)
 
+    @Slot(int)
+    def update_yaw(self, yaw):
+        self.yaw = yaw*2*np.pi/3600
+
+    @Slot(int)
+    def update_pitch(self, pitch):
+        self.pitch = pitch*2*np.pi/3600
+
+    @Slot(int)
+    def update_roll(self, roll):
+        self.roll = roll*2*np.pi/3600
+
+    @Slot(int)
+    def update_step_height(self, step_height):
+        self.step_height = (step_height/10000.)
+
     @Slot()
     def stop_worker(self):
         self.should_stop = True
@@ -139,12 +162,20 @@ class WebotsWorker(QObject):
         self.vdir = np.pi/2
         self.vval = 0.
         self.omega = 0.
+        self.yaw = 0.
+        self.pitch = 0.
+        self.roll = 0.
+        self.step_height = 0.
 
         self.leg_spacing_signal.connect(self.update_leg_spacing)
         self.height_signal.connect(self.update_height)
         self.vdir_signal.connect(self.update_vdir)
         self.vval_signal.connect(self.update_vval)
         self.omega_signal.connect(self.update_omega)
+        self.yaw_signal.connect(self.update_yaw)
+        self.pitch_signal.connect(self.update_pitch)
+        self.roll_signal.connect(self.update_roll)
+        self.step_height_signal.connect(self.update_step_height)
 
         # Homing
         pos0g0 = np.array([0.2, 0., -0.1])
@@ -172,30 +203,34 @@ class WebotsWorker(QObject):
             if curr_time - t0 < 6.:
                 # Generate trajectories
                 leg_positions = [
-                        np.array([self.leg_spacing/2, 0.15]),
-                        np.array([self.leg_spacing/2, 0.]),
-                        np.array([self.leg_spacing/2, -0.15]),
-                        np.array([-self.leg_spacing/2, 0.15]),
-                        np.array([-self.leg_spacing/2, 0.]),
-                        np.array([-self.leg_spacing/2, -0.15]),
+                        np.array([self.leg_spacing/2, 0.15, -self.height]),
+                        np.array([self.leg_spacing/2, 0., -self.height]),
+                        np.array([self.leg_spacing/2, -0.15, -self.height]),
+                        np.array([-self.leg_spacing/2, 0.15, -self.height]),
+                        np.array([-self.leg_spacing/2, 0., -self.height]),
+                        np.array([-self.leg_spacing/2, -0.15, -self.height]),
                 ]
                 for leg_no, (leg_pos, leg) in \
                         enumerate(zip(leg_positions, legs), start=1):
                     pos = get_position(
-                        curr_time - t0,  # timepoint
-                        6.,              # cycle duration
-                        leg_no,          # leg number
-                        leg_pos,         # leg position (relative to center
-                                         #               of the corpus)
-                        0.01,            # step_height
+                        curr_time - t0,     # timepoint
+                        6.,                 # cycle duration
+                        leg_no,             # leg number
+                        leg_pos,            # leg position (relative to center
+                                            #               of the corpus)
+                        self.step_height,   # step_height
                         np.array([self.vval *           # velocity vector
                                   np.cos(self.vdir),
                                   self.vval *
                                   np.sin(self.vdir)]),
-                        self.omega       # angular velocity
+                        self.omega          # angular velocity
                     )
                     pos = adjust_leg_spacing(pos, self.leg_spacing)
                     pos = adjust_height(pos, self.height)
+                    pos = adjust_yaw(pos, self.yaw, self.leg_spacing,
+                                     leg_no, leg_pos)
+                    pos = adjust_pitch(pos, self.pitch, leg_pos)
+                    pos = adjust_roll(pos, self.roll, leg_no, leg_pos)
                     q = hexapod_kinematics_solver.inverse(pos)
                     leg.set_angles(q)
             else:

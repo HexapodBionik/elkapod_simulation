@@ -35,6 +35,10 @@ class ApplicationMainWindow(QMainWindow):
         self.ui.vdir_dial.sliderMoved.connect(self.update_vdir)
         self.ui.vval_slider.sliderMoved.connect(self.update_vval)
         self.ui.omega_dial.sliderMoved.connect(self.update_omega)
+        self.ui.yaw_dial.sliderMoved.connect(self.update_yaw)
+        self.ui.pitch_dial.sliderMoved.connect(self.update_pitch)
+        self.ui.roll_dial.sliderMoved.connect(self.update_roll)
+        self.ui.step_height_slider.sliderMoved.connect(self.update_step_height)
 
     def update_leg_spacing(self, spacing):
         self.leg_spacing_scene = self.draw_leg_spacing_scene((spacing-40)//2)
@@ -54,6 +58,18 @@ class ApplicationMainWindow(QMainWindow):
 
     def update_omega(self, omega):
         WEBOTS_WORKER.omega_signal.emit(omega)
+
+    def update_yaw(self, yaw):
+        WEBOTS_WORKER.yaw_signal.emit(yaw)
+
+    def update_pitch(self, pitch):
+        WEBOTS_WORKER.pitch_signal.emit(pitch)
+
+    def update_roll(self, roll):
+        WEBOTS_WORKER.roll_signal.emit(roll)
+
+    def update_step_height(self, step_height):
+        WEBOTS_WORKER.step_height_signal.emit(step_height)
 
     def draw_leg_spacing_scene(self, leg_len):
         scene = QGraphicsScene(self)
