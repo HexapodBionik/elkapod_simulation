@@ -5,6 +5,13 @@ from MotionPlanning.kinematics.kinematics_utils import rot_x, rot_y, rot_z
 def _pos_without_omega(t: float, tref: float,
                        cycle_time: float, step_height: float,
                        v: np.ndarray) -> np.ndarray:
+    """
+    Helper function. To be used when angular velocity
+    `omega` is zero.
+
+    Generated trajectory is a fragment of straight line
+    in x, y.
+    """
     p0 = 0.25*cycle_time*v
     return np.array([p0[0] - v[0]*tref,
                      p0[1] - v[1]*tref,
@@ -17,9 +24,28 @@ def get_position(t: float, cycle_time: float,
                  leg_no: int, leg_pos: np.ndarray,
                  step_height: float, v: np.ndarray,
                  omega: float) -> np.ndarray:
+    """
+    Generate base trajectory for legs of
+    a hexapod moving with given velocity `v` in
+    any direction and angular velocity `omega`.
+
+    Such trajectory is fragment of a circle in
+    x, y unless angular velocity `omega` is zero.
+    In such a case helper solver is used:
+    `_pos_without_omega`.
+
+    Three-Point Gait is assumed.
+    """
+
     # Translate coordinate system
+    # FIXME: Make this step unnecessary
+    #        (update equations)
     v = np.array([v[0], -v[1]])
 
+    # In Three-Point-Gait legs 1, 3, 5
+    # should move in opposite direction
+    # than legs 2, 4, 6 so we shift their
+    # trajectories by 0.5*cycle_time
     if leg_no == 1 or leg_no == 3 or \
        leg_no == 5:
         # Three point gait - Shift trajectory of
@@ -29,6 +55,16 @@ def get_position(t: float, cycle_time: float,
         else:
             t -= 0.5*cycle_time
 
+    # In second part of the cycle,
+    # legs follow same trajectory
+    # in x, y, but in opposite direction.
+    #
+    # t    - true timepoint
+    # tref - fake timepoint which
+    #        incrases during first
+    #        part of the cycle and
+    #        decrases during second
+    #        part of the cycle
     if t > 0.5*cycle_time:
         tref = cycle_time - t
     else:
@@ -36,20 +72,37 @@ def get_position(t: float, cycle_time: float,
 
     if omega == 0.:
         # Handle special case of omega == 0
+        # Trajectory in x, y is fragment of a line
         point = _pos_without_omega(t, tref, cycle_time, step_height, v)
     else:
+        # Trajectory in x, y is fragment of a circle
+
+        # r_c - fragment of the circle followed by hexapod
         r_c = np.linalg.norm(v)/omega
+
+        # vdir - unit vector of direction of the velocity `v`
         if np.linalg.norm(v) > 0.:
             vdir = v/np.linalg.norm(v)
         else:
             vdir = np.array([0., 0.])
+
+        # center - center of the circle followed by hexapod
         odir = np.array([-vdir[1], vdir[0]])
         center = odir*r_c
 
+        # position of the leg relative to the center of
+        # the circle followed by hexapod
         rel_pos = center + leg_pos[:2]
 
+        # r - Radius of a circle with same center but
+        #     crossing end of the current leg in xy plane.
         r = np.sqrt(rel_pos[0]**2 + rel_pos[1]**2)
+
+        # phi0 - position of the end of the current leg
+        #        on such circle
         phi0 = np.arctan2(rel_pos[1], rel_pos[0])
+
+        # phi_m - In timepoint 0 our leg has position phi_m
         phi_m = phi0 - 0.25*cycle_time*omega
 
         point = np.array([r*np.cos(phi_m + omega*tref) - rel_pos[0],
