@@ -9,7 +9,7 @@ tylko funkcją sklejaną z wielomianów. Ponieważ teraz nogi nie są
 podnoszone natychmiastowo, trzeba zatrzymać ruch na chilę, opuścić
 pewne nogi, podnieść inne nogi i wznowić ruch.
 
-\[](./rc/trajs.png)
+![](./rc/trajs.png)
 
 Chwiania się heksapoda nie udało się wyeliminować. Wydaje się, że
 wynika ono ze sposobu w jaki Webots symuluje robota. W symulacji
@@ -25,7 +25,7 @@ Sterownik pozwala niezależnie sterować:
 
 Topologia sterownika odpowiada temu podziałowi.
 
-\[](./rc/topology.jpg)
+![](./rc/topology.jpg)
 
 Na początku generowana jest bazowa trajektoria (względem punktu bazowego).
 Później jest stosowana zmiana układu współrzędnych wzg. mountpointu.
