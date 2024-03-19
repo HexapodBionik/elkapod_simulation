@@ -129,33 +129,41 @@ class WebotsWorker(QObject):
                     np.array([-self.leg_spacing/2, -0.15]),
             ]
 
+            # Update trajectories
+            leg_trajs = []
+            for leg_no, (leg_pos, time_mapping) in \
+                    enumerate(zip(leg_positions,
+                                  self.time_mappings),
+                              start=1):
+                shape = traj_shape(
+                    leg_pos,                        # leg position
+                    leg_no,                         # leg number
+                    np.array([0., 0., 1.]),         # normal to plane
+                    np.array([self.vval *           # linear
+                              np.cos(self.vdir),
+                              self.vval *
+                              np.sin(self.vdir)]) * self.cycle_time,
+                    self.omega * self.cycle_time,   # angular
+                    self.step_height,               # step height
+                    self.height,                    # height
+                    0.,                             # horizontal shift
+                    self.yaw,                       # yaw
+                    self.pitch,                     # pitch
+                    self.roll,                      # roll
+                    0.1                             # margin
+                )
+
+                leg_trajs.append(
+                    lambda t, shape=shape, time_mapping=time_mapping:
+                        shape(time_mapping(t))
+                )
+
             curr_time = time()
-            if curr_time - t0 < self.cycle_time:
-                for leg_no, (leg_pos, leg, time_mapping) in \
-                        enumerate(zip(leg_positions,
-                                      self.robot.legs,
-                                      self.time_mappings),
-                                  start=1):
-                    shape = traj_shape(
-                        leg_pos,                        # leg position
-                        leg_no,                         # leg number
-                        np.array([0., 0., 1.]),         # normal to plane
-                        np.array([self.vval *           # linear
-                                  np.cos(self.vdir),
-                                  self.vval *
-                                  np.sin(self.vdir)]) * self.cycle_time,
-                        self.omega * self.cycle_time,   # angular
-                        self.step_height,               # step height
-                        self.height,                    # height
-                        0.,                             # horizontal shift
-                        self.yaw,                       # yaw
-                        self.pitch,                     # pitch
-                        self.roll,                      # roll
-                        0.1                             # margin
-                    )
-                    leg.set_pose(shape(time_mapping(curr_time - t0)))
-            else:
+            if curr_time - t0 >= self.cycle_time:
                 t0 = curr_time
+
+            for leg, traj in zip(self.robot.legs, leg_trajs):
+                leg.set_pose(traj(curr_time - t0))
 
         # Tell Qt part that we have finished
         self.finished.emit()
