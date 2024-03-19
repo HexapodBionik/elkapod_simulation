@@ -147,6 +147,7 @@ class WebotsWorker(QObject):
                         self.omega * self.cycle_time,   # angular
                         self.step_height,               # step height
                         self.height,                    # height
+                        0.,                             # horizontal shift
                         self.yaw,                       # yaw
                         self.pitch,                     # pitch
                         self.roll,                      # roll

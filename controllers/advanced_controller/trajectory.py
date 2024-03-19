@@ -241,6 +241,7 @@ def add_plane(p: np.ndarray, n: np.ndarray) -> np.ndarray:
 def mountpoint_relative(p: np.ndarray,
                         mountpoint_no: int,
                         height: float,
+                        horizontal_shift: float,
                         yaw: float,
                         pitch: float,
                         roll: float) -> np.ndarray:
@@ -248,6 +249,7 @@ def mountpoint_relative(p: np.ndarray,
     @param p: Point relative to the base point
     @param mountpoint_no: Number of mountpoint on the robot
     @param height: Corpus suspension height
+    @param horizontal_shift: Y position of the corpus
     @param yaw: Corpus rotation in yaw
     @param pitch: Corpus rotation in pitch
     @param roll: Corpus rotation in roll
@@ -260,12 +262,24 @@ def mountpoint_relative(p: np.ndarray,
 
     # Positions of the mountpoints relative to the center
     mountpoint_positions = [
-        np.array([corpus_dimensions[0]/2., corpus_dimensions[1]/2., height]),
-        np.array([corpus_dimensions[0]/2., 0., height]),
-        np.array([corpus_dimensions[0]/2., -corpus_dimensions[1]/2., height]),
-        np.array([-corpus_dimensions[0]/2., corpus_dimensions[1]/2., height]),
-        np.array([-corpus_dimensions[0]/2., 0., height]),
-        np.array([-corpus_dimensions[0]/2., -corpus_dimensions[1]/2., height]),
+        np.array([corpus_dimensions[0]/2.,
+                  corpus_dimensions[1]/2. + horizontal_shift,
+                  height]),
+        np.array([corpus_dimensions[0]/2.,
+                  horizontal_shift,
+                  height]),
+        np.array([corpus_dimensions[0]/2.,
+                  -corpus_dimensions[1]/2. + horizontal_shift,
+                  height]),
+        np.array([-corpus_dimensions[0]/2.,
+                  corpus_dimensions[1]/2. + horizontal_shift,
+                  height]),
+        np.array([-corpus_dimensions[0]/2.,
+                  horizontal_shift,
+                  height]),
+        np.array([-corpus_dimensions[0]/2.,
+                  -corpus_dimensions[1]/2. + horizontal_shift,
+                  height]),
     ]
 
     # Mappings to mountpoint coordinate systems
@@ -297,6 +311,7 @@ def traj_point(leg_pos: np.ndarray,
                angular: np.ndarray,
                step_height: float,
                height: float,
+               horizontal_shift: float,
                yaw: float,
                pitch: float,
                roll: float,
@@ -310,6 +325,7 @@ def traj_point(leg_pos: np.ndarray,
     @param angular: Angular distance traveled by the leg in one time cycle
     @param step_height: Step height
     @param height: Corpus suspension height
+    @param horizontal_shift: Y position of the corpus
     @param yaw: Corpus rotation in yaw
     @param pitch: Corpus rotation in pitch
     @param roll: Corpus rotation in roll
@@ -337,6 +353,7 @@ def traj_point(leg_pos: np.ndarray,
         p,
         mountpoint_no,
         height,
+        horizontal_shift,
         yaw,
         pitch,
         roll,
@@ -352,6 +369,7 @@ def traj_shape(leg_pos: np.ndarray,
                angular: np.ndarray,
                step_height: float,
                height: float,
+               horizontal_shift: float,
                yaw: float,
                pitch: float,
                roll: float,
@@ -364,6 +382,7 @@ def traj_shape(leg_pos: np.ndarray,
     @param angular: Angular distance traveled by the leg in one time cycle
     @param step_height: Step height
     @param height: Corpus suspension height
+    @param horizontal_shift: Y position of the corpus
     @param yaw: Corpus rotation in yaw
     @param pitch: Corpus rotation in pitch
     @param roll: Corpus rotation in roll
@@ -380,6 +399,7 @@ def traj_shape(leg_pos: np.ndarray,
                           angular,
                           step_height,
                           height,
+                          horizontal_shift,
                           yaw,
                           pitch,
                           roll,
