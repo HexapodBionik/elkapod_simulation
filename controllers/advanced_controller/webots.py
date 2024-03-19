@@ -66,7 +66,7 @@ class WebotsWorker(QObject):
 
     @Slot(int)
     def update_gait(self, gait):
-        self.time_mappings = build_gait(gait, self.cycle_time)
+        self.time_mappings = build_gait(gait, self.cycle_time, 6)
 
     @Slot()
     def stop_worker(self):
@@ -87,7 +87,7 @@ class WebotsWorker(QObject):
         self.step_height = 0.
 
         self.cycle_time = 6.
-        self.time_mappings = build_gait('3POINT', self.cycle_time)
+        self.time_mappings = build_gait('3POINT', self.cycle_time, 6)
 
         self.leg_spacing_signal.connect(self.update_leg_spacing)
         self.height_signal.connect(self.update_height)
