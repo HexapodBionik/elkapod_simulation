@@ -47,6 +47,13 @@ class ApplicationMainWindow(QMainWindow):
         ])
         self.ui.gait_selection.currentTextChanged.connect(self.update_gait)
 
+        self.ui.mode_selection.addItems([
+            'REGULAR',
+            'TRANSPORTER',
+        ])
+        self.ui.mode_selection.currentTextChanged.connect(self.update_mode)
+        self.ui.mode_selection.setEnabled(False)
+
     def update_leg_spacing(self, spacing):
         self.leg_spacing_scene = self.draw_leg_spacing_scene((spacing-40)//2)
         self.ui.leg_spacing_view.setScene(self.leg_spacing_scene)
@@ -79,7 +86,18 @@ class ApplicationMainWindow(QMainWindow):
         WEBOTS_WORKER.step_height_signal.emit(step_height)
 
     def update_gait(self, gait):
+        if gait == 'MECHATRONIC':
+            self.ui.mode_selection.setEnabled(True)
+        else:
+            self.ui.mode_selection.setCurrentIndex(0)
+            self.ui.mode_selection.setEnabled(False)
+            WEBOTS_WORKER.mode_signal.emit('REGULAR')
+
         WEBOTS_WORKER.gait_signal.emit(gait)
+
+    def update_mode(self, mode):
+        WEBOTS_WORKER.mode_signal.emit(mode)
+        WEBOTS_WORKER.gait_signal.emit('MECHATRONIC')
 
     def draw_leg_spacing_scene(self, leg_len):
         scene = QGraphicsScene(self)

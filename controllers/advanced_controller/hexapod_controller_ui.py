@@ -309,6 +309,23 @@ class Ui_HexapodController(object):
 
         self.horizontalLayout_5.addWidget(self.widget_10)
 
+        self.widget_11 = QWidget(self.widget_9)
+        self.widget_11.setObjectName(u"widget_11")
+        self.horizontalLayout_7 = QHBoxLayout(self.widget_11)
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.label_8 = QLabel(self.widget_11)
+        self.label_8.setObjectName(u"label_8")
+
+        self.horizontalLayout_7.addWidget(self.label_8)
+
+        self.mode_selection = QComboBox(self.widget_11)
+        self.mode_selection.setObjectName(u"mode_selection")
+
+        self.horizontalLayout_7.addWidget(self.mode_selection)
+
+
+        self.horizontalLayout_5.addWidget(self.widget_11)
+
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer)
@@ -341,5 +358,6 @@ class Ui_HexapodController(object):
         self.label_6.setText(QCoreApplication.translate("HexapodController", u"step height", None))
         self.label_7.setText(QCoreApplication.translate("HexapodController", u"Gait", None))
         self.gait_selection.setCurrentText("")
+        self.label_8.setText(QCoreApplication.translate("HexapodController", u"Mode", None))
     # retranslateUi
 
