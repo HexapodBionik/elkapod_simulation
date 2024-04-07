@@ -241,7 +241,6 @@ def add_plane(p: np.ndarray, n: np.ndarray) -> np.ndarray:
 def mountpoint_relative(p: np.ndarray,
                         mountpoint_no: int,
                         height: float,
-                        horizontal_shift: float,
                         yaw: float,
                         pitch: float,
                         roll: float) -> np.ndarray:
@@ -249,7 +248,6 @@ def mountpoint_relative(p: np.ndarray,
     @param p: Point relative to the base point
     @param mountpoint_no: Number of mountpoint on the robot
     @param height: Corpus suspension height
-    @param horizontal_shift: Y position of the corpus
     @param yaw: Corpus rotation in yaw
     @param pitch: Corpus rotation in pitch
     @param roll: Corpus rotation in roll
@@ -260,25 +258,24 @@ def mountpoint_relative(p: np.ndarray,
     # Dimensions of the corpus of the robot
     corpus_dimensions = np.array([0.2, 0.3])
 
-    # Positions of the mountpoints relative to the center
     mountpoint_positions = [
         np.array([corpus_dimensions[0]/2.,
-                  corpus_dimensions[1]/2. + horizontal_shift,
+                  corpus_dimensions[1]/2.,
                   height]),
         np.array([corpus_dimensions[0]/2.,
-                  horizontal_shift,
+                  0.,
                   height]),
         np.array([corpus_dimensions[0]/2.,
-                  -corpus_dimensions[1]/2. + horizontal_shift,
+                  -corpus_dimensions[1]/2.,
                   height]),
         np.array([-corpus_dimensions[0]/2.,
-                  corpus_dimensions[1]/2. + horizontal_shift,
+                  corpus_dimensions[1]/2.,
                   height]),
         np.array([-corpus_dimensions[0]/2.,
-                  horizontal_shift,
+                  0.,
                   height]),
         np.array([-corpus_dimensions[0]/2.,
-                  -corpus_dimensions[1]/2. + horizontal_shift,
+                  -corpus_dimensions[1]/2.,
                   height]),
     ]
 
@@ -311,7 +308,7 @@ def traj_point(leg_pos: np.ndarray,
                angular: np.ndarray,
                step_height: float,
                height: float,
-               horizontal_shift: float,
+               corpus_position: np.ndarray,
                yaw: float,
                pitch: float,
                roll: float,
@@ -325,7 +322,7 @@ def traj_point(leg_pos: np.ndarray,
     @param angular: Angular distance traveled by the leg in one time cycle
     @param step_height: Step height
     @param height: Corpus suspension height
-    @param horizontal_shift: Y position of the corpus
+    @param corpus_position: Position of the corpus on the XY plane
     @param yaw: Corpus rotation in yaw
     @param pitch: Corpus rotation in pitch
     @param roll: Corpus rotation in roll
@@ -348,12 +345,18 @@ def traj_point(leg_pos: np.ndarray,
     # Apply plane projection
     p = add_plane(p, n)
 
+    # Adjust corpus position
+    p += np.array([
+        -corpus_position[0],
+        corpus_position[1],
+        0.
+    ])
+
     # Translate coordinates
     p = mountpoint_relative(
         p,
         mountpoint_no,
         height,
-        horizontal_shift,
         yaw,
         pitch,
         roll,
@@ -369,7 +372,7 @@ def traj_shape(leg_pos: np.ndarray,
                angular: np.ndarray,
                step_height: float,
                height: float,
-               horizontal_shift: float,
+               corpus_position: np.ndarray,
                yaw: float,
                pitch: float,
                roll: float,
@@ -382,7 +385,7 @@ def traj_shape(leg_pos: np.ndarray,
     @param angular: Angular distance traveled by the leg in one time cycle
     @param step_height: Step height
     @param height: Corpus suspension height
-    @param horizontal_shift: Y position of the corpus
+    @param corpus_position: Position of the corpus on the XY plane
     @param yaw: Corpus rotation in yaw
     @param pitch: Corpus rotation in pitch
     @param roll: Corpus rotation in roll
@@ -399,7 +402,7 @@ def traj_shape(leg_pos: np.ndarray,
                           angular,
                           step_height,
                           height,
-                          horizontal_shift,
+                          corpus_position,
                           yaw,
                           pitch,
                           roll,

@@ -31,9 +31,12 @@ def _mod_one(x: float) -> float:
 
 def build_gait(type: str,
                T: float,
-               legs_cnt: int) -> list[Callable[[float], float]]:
+               supportive_legs: list[int]) -> list[Callable[[float], float]]:
+    assert len(supportive_legs) == 6
+    legs_cnt = sum(supportive_legs)
+
     if type == '3POINT':
-        assert legs_cnt == 6
+        assert sum(supportive_legs) == 6
         return [
             traj_shift(T, 0.25*T, 0.5),
             traj_shift(T, 0.75*T, 0.5),
@@ -44,7 +47,7 @@ def build_gait(type: str,
         ]
 
     if type == 'RIPPLE':
-        assert legs_cnt == 6
+        assert sum(supportive_legs) == 6
         return [
             traj_shift(T, 0.25*T, 3./4.),
             traj_shift(T, 0., 3./4.),
@@ -55,9 +58,29 @@ def build_gait(type: str,
         ]
 
     if type == 'MECHATRONIC':
+        trajs = []
+        i = 0
+        for j in range(6):
+            if supportive_legs[j]:
+                trajs.append(
+                    traj_shift(
+                        T,
+                        _mod_one(0.25 + i/legs_cnt)*T,
+                        (legs_cnt-1)/legs_cnt
+                    )
+                )
+                i += 1
+            else:
+                trajs.append(None)
+
+        return trajs
+
+    if type == 'STAND':
         return [
-            traj_shift(T, _mod_one(0.25 + i/legs_cnt)*T, (legs_cnt-1)/legs_cnt)
-            for i in range(legs_cnt)
+            (lambda t: 0.5)
+            if supportive_legs[i]
+            else None
+            for i in range(6)
         ]
 
     raise Exception(f"Gait \"{type}\" not known")

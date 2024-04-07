@@ -15,20 +15,31 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QDial, QGraphicsView,
-    QHBoxLayout, QLabel, QMainWindow, QSizePolicy,
-    QSlider, QSpacerItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDial,
+    QGraphicsView, QHBoxLayout, QLabel, QMainWindow,
+    QSizePolicy, QSlider, QSpacerItem, QVBoxLayout,
+    QWidget)
 
 class Ui_HexapodController(object):
     def setupUi(self, HexapodController):
         if not HexapodController.objectName():
             HexapodController.setObjectName(u"HexapodController")
-        HexapodController.resize(554, 603)
+        HexapodController.resize(554, 637)
         self.central_widget = QWidget(HexapodController)
         self.central_widget.setObjectName(u"central_widget")
         self.verticalLayout_2 = QVBoxLayout(self.central_widget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.leg_spacing_widget = QWidget(self.central_widget)
+        self.widget_13 = QWidget(self.central_widget)
+        self.widget_13.setObjectName(u"widget_13")
+        self.horizontalLayout_8 = QHBoxLayout(self.widget_13)
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
+        self.widget_12 = QWidget(self.widget_13)
+        self.widget_12.setObjectName(u"widget_12")
+        self.verticalLayout_9 = QVBoxLayout(self.widget_12)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.verticalLayout_9.setContentsMargins(0, 0, 0, 0)
+        self.leg_spacing_widget = QWidget(self.widget_12)
         self.leg_spacing_widget.setObjectName(u"leg_spacing_widget")
         self.leg_spacing_widget.setEnabled(True)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
@@ -63,9 +74,9 @@ class Ui_HexapodController(object):
         self.horizontalLayout_2.addWidget(self.leg_spacing_slider)
 
 
-        self.verticalLayout_2.addWidget(self.leg_spacing_widget)
+        self.verticalLayout_9.addWidget(self.leg_spacing_widget)
 
-        self.height_widget = QWidget(self.central_widget)
+        self.height_widget = QWidget(self.widget_12)
         self.height_widget.setObjectName(u"height_widget")
         sizePolicy.setHeightForWidth(self.height_widget.sizePolicy().hasHeightForWidth())
         self.height_widget.setSizePolicy(sizePolicy)
@@ -87,7 +98,38 @@ class Ui_HexapodController(object):
         self.horizontalLayout.addWidget(self.height_slider)
 
 
-        self.verticalLayout_2.addWidget(self.height_widget)
+        self.verticalLayout_9.addWidget(self.height_widget)
+
+
+        self.horizontalLayout_8.addWidget(self.widget_12)
+
+        self.widget_14 = QWidget(self.widget_13)
+        self.widget_14.setObjectName(u"widget_14")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.widget_14.sizePolicy().hasHeightForWidth())
+        self.widget_14.setSizePolicy(sizePolicy2)
+        self.verticalLayout_10 = QVBoxLayout(self.widget_14)
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.label_9 = QLabel(self.widget_14)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_10.addWidget(self.label_9)
+
+        self.corpus_position = QGraphicsView(self.widget_14)
+        self.corpus_position.setObjectName(u"corpus_position")
+        self.corpus_position.setMinimumSize(QSize(120, 180))
+        self.corpus_position.setMaximumSize(QSize(120, 180))
+
+        self.verticalLayout_10.addWidget(self.corpus_position)
+
+
+        self.horizontalLayout_8.addWidget(self.widget_14)
+
+
+        self.verticalLayout_2.addWidget(self.widget_13)
 
         self.velocity_widget = QWidget(self.central_widget)
         self.velocity_widget.setObjectName(u"velocity_widget")
@@ -264,11 +306,11 @@ class Ui_HexapodController(object):
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.step_height_slider = QSlider(self.widget_8)
         self.step_height_slider.setObjectName(u"step_height_slider")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.step_height_slider.sizePolicy().hasHeightForWidth())
-        self.step_height_slider.setSizePolicy(sizePolicy2)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.step_height_slider.sizePolicy().hasHeightForWidth())
+        self.step_height_slider.setSizePolicy(sizePolicy3)
         self.step_height_slider.setMinimumSize(QSize(0, 80))
         self.step_height_slider.setMaximumSize(QSize(16777215, 80))
         self.step_height_slider.setMaximum(150)
@@ -309,6 +351,10 @@ class Ui_HexapodController(object):
 
         self.horizontalLayout_5.addWidget(self.widget_10)
 
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_5.addItem(self.horizontalSpacer)
+
         self.widget_11 = QWidget(self.widget_9)
         self.widget_11.setObjectName(u"widget_11")
         self.horizontalLayout_7 = QHBoxLayout(self.widget_11)
@@ -318,17 +364,38 @@ class Ui_HexapodController(object):
 
         self.horizontalLayout_7.addWidget(self.label_8)
 
-        self.mode_selection = QComboBox(self.widget_11)
-        self.mode_selection.setObjectName(u"mode_selection")
+        self.checkBox_1 = QCheckBox(self.widget_11)
+        self.checkBox_1.setObjectName(u"checkBox_1")
 
-        self.horizontalLayout_7.addWidget(self.mode_selection)
+        self.horizontalLayout_7.addWidget(self.checkBox_1)
+
+        self.checkBox_2 = QCheckBox(self.widget_11)
+        self.checkBox_2.setObjectName(u"checkBox_2")
+
+        self.horizontalLayout_7.addWidget(self.checkBox_2)
+
+        self.checkBox_3 = QCheckBox(self.widget_11)
+        self.checkBox_3.setObjectName(u"checkBox_3")
+
+        self.horizontalLayout_7.addWidget(self.checkBox_3)
+
+        self.checkBox_4 = QCheckBox(self.widget_11)
+        self.checkBox_4.setObjectName(u"checkBox_4")
+
+        self.horizontalLayout_7.addWidget(self.checkBox_4)
+
+        self.checkBox_5 = QCheckBox(self.widget_11)
+        self.checkBox_5.setObjectName(u"checkBox_5")
+
+        self.horizontalLayout_7.addWidget(self.checkBox_5)
+
+        self.checkBox_6 = QCheckBox(self.widget_11)
+        self.checkBox_6.setObjectName(u"checkBox_6")
+
+        self.horizontalLayout_7.addWidget(self.checkBox_6)
 
 
         self.horizontalLayout_5.addWidget(self.widget_11)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_5.addItem(self.horizontalSpacer)
 
 
         self.verticalLayout_2.addWidget(self.widget_9)
@@ -349,6 +416,7 @@ class Ui_HexapodController(object):
 
     def retranslateUi(self, HexapodController):
         HexapodController.setWindowTitle(QCoreApplication.translate("HexapodController", u"Hexapod Controller", None))
+        self.label_9.setText(QCoreApplication.translate("HexapodController", u"Corpus Position", None))
         self.label.setText(QCoreApplication.translate("HexapodController", u"v direction", None))
         self.label_2.setText(QCoreApplication.translate("HexapodController", u"v value", None))
         self.label_3.setText(QCoreApplication.translate("HexapodController", u"omega", None))
@@ -358,6 +426,12 @@ class Ui_HexapodController(object):
         self.label_6.setText(QCoreApplication.translate("HexapodController", u"step height", None))
         self.label_7.setText(QCoreApplication.translate("HexapodController", u"Gait", None))
         self.gait_selection.setCurrentText("")
-        self.label_8.setText(QCoreApplication.translate("HexapodController", u"Mode", None))
+        self.label_8.setText(QCoreApplication.translate("HexapodController", u"Supportive legs", None))
+        self.checkBox_1.setText(QCoreApplication.translate("HexapodController", u"1", None))
+        self.checkBox_2.setText(QCoreApplication.translate("HexapodController", u"2", None))
+        self.checkBox_3.setText(QCoreApplication.translate("HexapodController", u"3", None))
+        self.checkBox_4.setText(QCoreApplication.translate("HexapodController", u"4", None))
+        self.checkBox_5.setText(QCoreApplication.translate("HexapodController", u"5", None))
+        self.checkBox_6.setText(QCoreApplication.translate("HexapodController", u"6", None))
     # retranslateUi
 

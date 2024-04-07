@@ -27,7 +27,8 @@ class WebotsWorker(QObject):
     roll_signal = Signal(int)
     step_height_signal = Signal(int)
     gait_signal = Signal(str)
-    mode_signal = Signal(str)
+    sl_signal = Signal(list)
+    corpus_position_signal = Signal(np.ndarray)
 
     @Slot(int)
     def update_leg_spacing(self, leg_spacing):
@@ -65,16 +66,25 @@ class WebotsWorker(QObject):
     def update_step_height(self, step_height):
         self.step_height = (step_height/10000.)
 
-    @Slot(int)
+    @Slot(str)
     def update_gait(self, gait):
-        if self.mode == 'REGULAR':
-            self.time_mappings = build_gait(gait, self.cycle_time, 6)
-        else:
-            self.time_mappings = build_gait(gait, self.cycle_time, 4)
+        self.gait = gait
 
-    @Slot(int)
-    def update_mode(self, mode):
-        self.mode = mode
+        # Rebuild gait
+        self.time_mappings = build_gait(self.gait, self.cycle_time,
+                                        self.supportive_legs)
+
+    @Slot(list)
+    def update_sl(self, supportive_legs):
+        self.supportive_legs = supportive_legs
+
+        # Rebuild gait
+        self.time_mappings = build_gait(self.gait, self.cycle_time,
+                                        self.supportive_legs)
+
+    @Slot(np.ndarray)
+    def update_corpus_position(self, position):
+        self.corpus_position = position
 
     @Slot()
     def stop_worker(self):
@@ -93,10 +103,13 @@ class WebotsWorker(QObject):
         self.pitch = 0.
         self.roll = 0.
         self.step_height = 0.
+        self.corpus_position = np.array([0., 0.])
 
         self.cycle_time = 6.
-        self.time_mappings = build_gait('3POINT', self.cycle_time, 6)
-        self.mode = 'REGULAR'
+        self.supportive_legs = [True for _ in range(6)]
+        self.gait = '3POINT'
+        self.time_mappings = build_gait(self.gait, self.cycle_time,
+                                        self.supportive_legs)
 
         self.leg_spacing_signal.connect(self.update_leg_spacing)
         self.height_signal.connect(self.update_height)
@@ -108,7 +121,8 @@ class WebotsWorker(QObject):
         self.roll_signal.connect(self.update_roll)
         self.step_height_signal.connect(self.update_step_height)
         self.gait_signal.connect(self.update_gait)
-        self.mode_signal.connect(self.update_mode)
+        self.sl_signal.connect(self.update_sl)
+        self.corpus_position_signal.connect(self.update_corpus_position)
 
         self.robot = MegaLynx()
 
@@ -130,49 +144,26 @@ class WebotsWorker(QObject):
                 break
 
             # Update leg positions
-            if self.mode == 'REGULAR':
-                supportive_legs = [1, 2, 3, 4, 5, 6]
-                leg_positions = [
-                        np.array([self.leg_spacing/2, 0.15]),
-                        np.array([self.leg_spacing/2, 0.]),
-                        np.array([self.leg_spacing/2, -0.15]),
-                        np.array([-self.leg_spacing/2, 0.15]),
-                        np.array([-self.leg_spacing/2, 0.]),
-                        np.array([-self.leg_spacing/2, -0.15]),
-                ]
-            else:
-                supportive_legs = [2, 3, 5, 6]
-                leg_positions = [
-                        np.array([self.leg_spacing/2, 0.15]),
-                        np.array([self.leg_spacing/2, -0.3]),
-                        np.array([-self.leg_spacing/2, 0.15]),
-                        np.array([-self.leg_spacing/2, -0.3]),
-                ]
-#             leg_positions = [
-#                     np.array([self.leg_spacing/2, 0.15]),
-#                     np.array([self.leg_spacing/2, 0.]),
-#                     np.array([self.leg_spacing/2, -0.15]),
-#                     np.array([-self.leg_spacing/2, 0.15]),
-#                     np.array([-self.leg_spacing/2, 0.]),
-#                     np.array([-self.leg_spacing/2, -0.15]),
-#             ]
-# 
-#             if self.mode == 'TRANSPORTER':
-#                 supportive_legs = [2, 3, 5, 6]
-#             else:
-#                 supportive_legs = [1, 2, 3, 4, 5, 6]
-# 
-#             leg_positions = [
-#                 leg_positions[i-1]
-#                 for i in supportive_legs
-#             ]
+            leg_positions = [
+                    np.array([self.leg_spacing/2, 0.15]),
+                    np.array([self.leg_spacing/2, 0.]),
+                    np.array([self.leg_spacing/2, -0.15]),
+                    np.array([-self.leg_spacing/2, 0.15]),
+                    np.array([-self.leg_spacing/2, 0.]),
+                    np.array([-self.leg_spacing/2, -0.15]),
+            ]
 
             # Update trajectories
             leg_trajs = []
-            for leg_no, leg_pos, time_mapping in \
-                    zip(supportive_legs,
-                        leg_positions,
-                        self.time_mappings):
+            for leg_no, (leg_pos, time_mapping) in \
+                    enumerate(
+                        zip(leg_positions,
+                            self.time_mappings),
+                        start=1):
+                if time_mapping is None:
+                    leg_trajs.append(lambda t: np.array([0.32, 0., 0.]))
+                    continue
+
                 shape = traj_shape(
                     leg_pos,                        # leg position
                     leg_no,                         # leg number
@@ -184,7 +175,7 @@ class WebotsWorker(QObject):
                     self.omega * self.cycle_time,   # angular
                     self.step_height,               # step height
                     self.height,                    # height
-                    0.,                             # horizontal_shift
+                    self.corpus_position,           # corpus position
                     self.yaw,                       # yaw
                     self.pitch,                     # pitch
                     self.roll,                      # roll
@@ -195,10 +186,6 @@ class WebotsWorker(QObject):
                     lambda t, shape=shape, time_mapping=time_mapping:
                         shape(time_mapping(t))
                 )
-
-            if self.mode == 'TRANSPORTER':
-                leg_trajs.insert(2, lambda t: np.array([0., -0.3, 0.]))
-                leg_trajs.insert(0, lambda t: np.array([0., -0.3, 0.]))
 
             curr_time = time()
             if curr_time - t0 >= self.cycle_time:

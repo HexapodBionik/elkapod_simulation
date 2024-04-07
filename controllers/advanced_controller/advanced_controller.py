@@ -3,13 +3,19 @@ from PySide6.QtWidgets import (
     QGraphicsScene,
     QMainWindow,
 )
-from PySide6.QtGui import QColor, QPolygonF
+from PySide6.QtGui import (
+    QColor,
+    QPolygonF,
+    QMouseEvent,
+)
 from PySide6.QtCore import (
         QPoint,
         QThread,
         QCoreApplication,
+        Slot,
 )
 from webots import WebotsWorker
+import numpy as np
 
 from hexapod_controller_ui import Ui_HexapodController
 
@@ -30,6 +36,12 @@ class ApplicationMainWindow(QMainWindow):
         self.ui.leg_spacing_view.setScene(self.leg_spacing_scene)
         self.height_scene = self.draw_height_scene(20)
         self.ui.height_view.setScene(self.height_scene)
+        self.corpus_position_scene = self.draw_corpus_position_scene(
+                np.array([0., 0.]))
+        self.ui.corpus_position.setScene(self.corpus_position_scene)
+        self.ui.corpus_position.mousePressEvent = \
+            self.update_corpus_position
+
         self.ui.leg_spacing_slider.sliderMoved.connect(self.update_leg_spacing)
         self.ui.height_slider.sliderMoved.connect(self.update_height)
         self.ui.vdir_dial.sliderMoved.connect(self.update_vdir)
@@ -44,15 +56,20 @@ class ApplicationMainWindow(QMainWindow):
             '3POINT',
             'RIPPLE',
             'MECHATRONIC',
+            'STAND',
         ])
         self.ui.gait_selection.currentTextChanged.connect(self.update_gait)
 
-        self.ui.mode_selection.addItems([
-            'REGULAR',
-            'TRANSPORTER',
-        ])
-        self.ui.mode_selection.currentTextChanged.connect(self.update_mode)
-        self.ui.mode_selection.setEnabled(False)
+        self.sl_checkboxes = [self.ui.checkBox_1, self.ui.checkBox_2,
+                              self.ui.checkBox_3, self.ui.checkBox_4,
+                              self.ui.checkBox_5, self.ui.checkBox_6]
+        for checkbox in self.sl_checkboxes:
+            checkbox.setEnabled(False)
+            checkbox.setChecked(True)
+            checkbox.toggled.connect(self.update_supportive_legs)
+
+        self.allowed_non_sl = 0
+        self.supportive_legs = [True for _ in range(6)]
 
     def update_leg_spacing(self, spacing):
         self.leg_spacing_scene = self.draw_leg_spacing_scene((spacing-40)//2)
@@ -63,6 +80,16 @@ class ApplicationMainWindow(QMainWindow):
         self.height_scene = self.draw_height_scene(height//5)
         self.ui.height_view.setScene(self.height_scene)
         WEBOTS_WORKER.height_signal.emit(height)
+
+    @Slot(QMouseEvent)
+    def update_corpus_position(self, event: QMouseEvent):
+        position = np.array([
+            self.ui.corpus_position.mapToScene(event.position().toPoint()).x(),
+            self.ui.corpus_position.mapToScene(event.position().toPoint()).y(),
+        ])
+        self.corpus_position_scene = self.draw_corpus_position_scene(position)
+        self.ui.corpus_position.setScene(self.corpus_position_scene)
+        WEBOTS_WORKER.corpus_position_signal.emit(position*0.000833)
 
     def update_vdir(self, vdir):
         WEBOTS_WORKER.vdir_signal.emit(vdir)
@@ -87,17 +114,73 @@ class ApplicationMainWindow(QMainWindow):
 
     def update_gait(self, gait):
         if gait == 'MECHATRONIC':
-            self.ui.mode_selection.setEnabled(True)
+            self.allowed_non_sl = 1
+            if sum(self.supportive_legs) < 5:
+                for checkbox in self.sl_checkboxes:
+                    checkbox.setEnabled(False)
+
+                for checkbox in self.sl_checkboxes:
+                    if not checkbox.isChecked():
+                        checkbox.setChecked(True)
+                        break
+            elif sum(self.supportive_legs) == 5:
+                for checkbox in self.sl_checkboxes:
+                    if checkbox.isChecked():
+                        checkbox.setEnabled(False)
+                    else:
+                        checkbox.setEnabled(True)
+            elif sum(self.supportive_legs) >= 6:
+                for checkbox in self.sl_checkboxes:
+                    checkbox.setEnabled(True)
+        elif gait == 'STAND':
+            self.allowed_non_sl = 2
+
+            if sum(self.supportive_legs) == 4:
+                for checkbox in self.sl_checkboxes:
+                    if checkbox.isChecked():
+                        checkbox.setEnabled(False)
+                    else:
+                        checkbox.setEnabled(True)
+            elif sum(self.supportive_legs) >= 5:
+                for checkbox in self.sl_checkboxes:
+                    checkbox.setEnabled(True)
         else:
-            self.ui.mode_selection.setCurrentIndex(0)
-            self.ui.mode_selection.setEnabled(False)
-            WEBOTS_WORKER.mode_signal.emit('REGULAR')
+            self.allowed_non_sl = 0
+            for checkbox in self.sl_checkboxes:
+                checkbox.setEnabled(False)
+                if not checkbox.isChecked():
+                    checkbox.setChecked(True)
 
         WEBOTS_WORKER.gait_signal.emit(gait)
 
-    def update_mode(self, mode):
-        WEBOTS_WORKER.mode_signal.emit(mode)
-        WEBOTS_WORKER.gait_signal.emit('MECHATRONIC')
+    def update_supportive_legs(self):
+        self.supportive_legs[int(self.sender().objectName()[-1])-1] = \
+            self.sender().isChecked()
+
+        if len(self.supportive_legs) - sum(self.supportive_legs) >= \
+           self.allowed_non_sl:
+            for checkbox in self.sl_checkboxes:
+                if checkbox.isChecked():
+                    checkbox.setEnabled(False)
+                else:
+                    checkbox.setEnabled(True)
+        else:
+            for checkbox in self.sl_checkboxes:
+                checkbox.setEnabled(True)
+
+        WEBOTS_WORKER.sl_signal.emit(self.supportive_legs)
+
+    def draw_corpus_position_scene(self, position):
+        scene = QGraphicsScene(self)
+        scene.addLine(-50., 0., 50., 0.)
+        scene.addLine(0., -80., 0., 80.)
+        scene.addEllipse(
+            position[0]-2., position[1]-2., 4., 4.,
+            QColor(255, 0, 0, 255),
+            QColor(255, 0, 0, 255),
+        )
+
+        return scene
 
     def draw_leg_spacing_scene(self, leg_len):
         scene = QGraphicsScene(self)
