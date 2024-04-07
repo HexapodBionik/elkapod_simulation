@@ -13,3 +13,6 @@ In terminal navigate to directory of
 controller you would like to use
 (for example  `./controllers/advanced_controller`)
 and type `./run.sh`.
+
+More detailed descriptions of specific controllers
+are in their directories.
