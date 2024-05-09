@@ -8,7 +8,7 @@ data_files.append(('share/' + package_name + '/worlds', ['worlds/flat_world.wbt'
 data_files.append(('share/' + package_name + '/protos', ['protos/ElkapodSimplified.proto']))
 data_files.append(('share/' + package_name + '/resource', ['resource/my_robot.urdf']))
 data_files.append(('share/' + package_name, ['package.xml']))
-data_files.append(('share/' + package_name + "/" + package_name, ['elkapod_sim/elkapod_comm_server.py']))
+data_files.append(('share/' + package_name + "/" + package_name, ['elkapod_sim/elkapod_simulation_comm_server.py']))
 
 setup(
     name=package_name,

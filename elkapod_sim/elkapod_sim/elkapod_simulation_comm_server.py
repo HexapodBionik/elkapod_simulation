@@ -30,7 +30,7 @@ class Leg:
         self._s3.setPosition(q[2])
 
 
-class ElkapodCommServer(Node):
+class ElkapodSimulationCommServer(Node):
     def __init__(self, robot):
         super().__init__("elkapod_comm_server")
 
