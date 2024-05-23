@@ -16,7 +16,7 @@ vcs import . < repos.yaml
 ```
 > [!IMPORTANT]
 > 
-> Additionally, you need to install the ElkapodAlgorithms Python package. For more instructions, visit the package's website.
+> Additionally, you need to install the ElkapodAlgorithms Python package. For more instructions, visit the package's [website](https://github.com/HexapodBionik/ElkapodAlgorithms.git).
 >
 
 ## How to run the simulation?
