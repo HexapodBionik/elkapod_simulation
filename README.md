@@ -14,7 +14,8 @@ git clone https://github.com/HexapodBionik/elkapod_sim.git elkapod_sim/src/
 cd elkapod_sim/src/
 vcs import . < repos.yaml
 ```
-> ![NOTE]
+> [!IMPORTANT]
+> 
 > Additionally, you need to install the ElkapodAlgorithms Python package. For more instructions, visit the package's website.
 >
 
