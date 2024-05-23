@@ -5,7 +5,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
 
 # Robot proto
-EXTERNPROTO "../protos/ElkapodSimplified.proto"
+EXTERNPROTO "../protos/ElkapodV1.proto"
 
 # Obstacles protos
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/released/projects/objects/obstacles/protos/Ramp30deg.proto"
@@ -37,7 +37,7 @@ RectangleArena {
 }
 
 # Elkapod robot declaration
-ElkapodSimplified {
+ElkapodV1 {
   translation 0.0530459 0.00806403 0.3
   rotation 0 0 1 3.1415
   controller "<extern>"

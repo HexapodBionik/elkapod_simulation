@@ -1,0 +1,957 @@
+#VRML_SIM R2023b utf8
+# license: Apache License 2.0
+# license url: http://www.apache.org/licenses/LICENSE-2.0
+# This is a proto file for Webots for the ElkapodV1
+# Extracted from: ../urdf/Main_body_and_legs_assembly_v2.urdf
+
+PROTO ElkapodV1 [
+  field  SFVec3f     translation     0 0 0
+  field  SFRotation  rotation        0 0 1 0
+  field  SFString    name            "Elkapod"                    # Is `Robot.name`.
+  field  SFString    controller      "void"                       # Is `Robot.controller`.
+  field  MFString    controllerArgs  []                           # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""                           # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE                        # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE                         # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   FALSE                        # Is `Robot.selfCollision`.
+]
+{
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    controller IS controller
+    controllerArgs IS controllerArgs
+    customData IS customData
+    supervisor IS supervisor
+    synchronization IS synchronization
+    selfCollision IS selfCollision
+    children [
+      Shape {
+        appearance DEF base_material PBRAppearance {
+          baseColor 0.0 0.0 0.0
+          roughness 1.000000
+          metalness 0.5
+        }
+        geometry DEF base Mesh {
+          url "../meshes/base.STL"
+        }
+        physics Physics {
+            density -1
+            mass 2.0
+            centerOfMass [ 0.0 -0.000000 -0.000000 ]
+          }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 0.000000 -1.000000
+          anchor 0.123000 0.114300 0.027125
+        }
+        device [
+          RotationalMotor {
+            name "Servo11"
+            maxVelocity 10.0
+            maxTorque 1000.0
+          }
+          PositionSensor {
+            name "joint_1A_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.123000 0.114300 0.027125
+          rotation 0.000000 0.000000 1.000000 1.570800
+          children [
+            Shape {
+              appearance DEF link_1A_material PBRAppearance {
+                baseColor 0.0 0.0 0.0
+                roughness 1.000000
+                metalness 0
+              }
+              geometry DEF linkA Mesh {
+                url "../meshes/linkA.STL"
+              }
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis 0.000000 -1.000000 0.0
+                anchor 0.067600 0.000000 0.000000
+              }
+              device [
+                RotationalMotor {
+                  name "Servo12"
+                  maxVelocity 10.0
+                  maxTorque 1000.0
+                }
+                PositionSensor {
+                  name "joint_1B_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.067600 0.000000 0.000000
+                rotation -1.000000 0.000000 0.000000 1.570800
+                children [
+                  Shape {
+                    appearance DEF link_1B_material PBRAppearance {
+                      baseColor 0.0 0.0 0.0
+                      roughness 1.000000
+                      metalness 0
+                    }
+                    geometry DEF linkB Mesh {
+                      url "../meshes/linkB.STL"
+                    }
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 0.000000 -1.000000
+                      anchor 0.088094 0.027776 0.000000
+                    }
+                    device [
+                      RotationalMotor {
+                        name "Servo13"
+                        maxVelocity 10.0
+                        maxTorque 1000.0
+                      }
+                      PositionSensor {
+                        name "joint_1C_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      translation 0.088094 0.027776 0.000000
+                      children [
+                        Shape {
+                          appearance DEF link_1C_material PBRAppearance {
+                            baseColor 1.0 0.4 0.0
+                            roughness 1.000000
+                            metalness 0
+                          }
+                          geometry DEF linkC Mesh {
+                            url "../meshes/linkC.STL"
+                          }
+                        }
+                        Solid {
+                          translation 0.11778 0.18063 0.000000
+                          rotation 1.000000 0.000000 0.000000 1.570800
+                          children [
+                            DEF L1FootSphere Shape {
+                            appearance PBRAppearance {
+                              baseColor 0.0 0.0 0.0
+                              roughness 1
+                              metalness 0
+                            }
+                            geometry Sphere {
+                              radius 0.02
+                            }
+                            }
+                          ]
+                          name "end_1"
+                          boundingObject USE L1FootSphere
+                          physics Physics {
+                            density -1
+                            mass 0.000122
+                            centerOfMass [ -0.004100 -0.019599 0.043843 ]
+                            inertiaMatrix [
+                              4.523771e-10 8.997212e-10 4.523771e-10
+                              -3.084925e-24 -1.561710e-25 8.526852e-25
+                            ]
+                          }
+                        }
+                      ]
+                      name "link_1C"
+                      boundingObject USE linkC
+                      physics Physics {
+                        density -1
+                        mass 0.095536
+                        centerOfMass [ 0.069612 0.083629 0.000572 ]
+                        inertiaMatrix [
+                          1.136113e-04 6.533240e-05 1.456277e-04
+                          -5.960719e-05 -7.371445e-07 -7.755831e-07
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "link_1B"
+                boundingObject USE linkB
+                physics Physics {
+                  density -1
+                  mass 0.136748
+                  centerOfMass [ 0.046631 0.007458 -0.000487 ]
+                  inertiaMatrix [
+                    2.341247e-05 3.593732e-05 3.038945e-05
+                    -4.384997e-06 -9.212454e-08 2.921762e-07
+                  ]
+                }
+              }
+            }
+          ]
+          name "link_1A"
+          boundingObject USE linkA
+          physics Physics {
+            density -1
+            mass 0.041943
+            centerOfMass [ 0.036508 0.001248 0.001257 ]
+            inertiaMatrix [
+              1.980694e-05 1.669290e-05 1.664867e-05
+              -2.127990e-20 1.789127e-15 -3.234936e-17
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 0.000000 -1.000000
+          anchor 0.000000 0.114300 0.027125
+        }
+        device [
+          RotationalMotor {
+            name "Servo21"
+            maxVelocity 10.0
+            maxTorque 1000.0
+          }
+          PositionSensor {
+            name "joint_2A_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.000000 0.114300 0.027125
+          rotation 0.000000 0.000000 1.000000 1.570800
+          children [
+            Shape {
+              appearance DEF link_2A_material PBRAppearance {
+                baseColor 0.0 0.0 0.0
+                roughness 1.000000
+                metalness 0
+              }
+              geometry USE linkA
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis 0.000000 -1.000000 0.0
+                anchor 0.067600 0.000000 0.000000
+              }
+              device [
+                RotationalMotor {
+                  name "Servo22"
+                  maxVelocity 10.0
+                  maxTorque 1000.0
+                }
+                PositionSensor {
+                  name "joint_2B_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.067600 0.000000 0.000000
+                rotation -1.000000 0.000000 0.000000 1.570800
+                children [
+                  Shape {
+                    appearance DEF link_2B_material PBRAppearance {
+                      baseColor 0.0 0.0 0.0
+                      roughness 1.000000
+                      metalness 0
+                    }
+                    geometry USE linkB
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 0.000000 -1.000000
+                      anchor 0.088094 0.027776 0.000000
+                    }
+                    device [
+                      RotationalMotor {
+                        name "Servo23"
+                        maxVelocity 10.0
+                        maxTorque 1000.0
+                      }
+                      PositionSensor {
+                        name "joint_2C_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      translation 0.088094 0.027776 0.000000
+                      children [
+                        Shape {
+                          appearance DEF link_2C_material PBRAppearance {
+                            baseColor 1.0 0.4 0.0
+                            roughness 1.000000
+                            metalness 0
+                          }
+                          geometry USE linkC
+                        }
+                        Solid {
+                          translation 0.11778 0.18063 0.000000
+                          rotation 1.000000 0.000000 0.000000 1.570800
+                          children [
+                            DEF L1FootSphere Shape {
+                            appearance PBRAppearance {
+                              baseColor 0.0 0.0 0.0
+                              roughness 1
+                              metalness 0
+                            }
+                            geometry Sphere {
+                              radius 0.02
+                            }
+                            }
+                          ]
+                          name "end_2"
+                          boundingObject USE L1FootSphere
+                          physics Physics {
+                            density -1
+                            mass 0.000122
+                            centerOfMass [ -0.004100 -0.019599 0.043843 ]
+                            inertiaMatrix [
+                              4.523771e-10 8.997212e-10 4.523771e-10
+                              2.899468e-25 2.444325e-26 -8.495392e-25
+                            ]
+                          }
+                        }
+                      ]
+                      name "link_2C"
+                      boundingObject USE linkC
+                      physics Physics {
+                        density -1
+                        mass 0.084945
+                        centerOfMass [ 0.067514 0.079018 -0.000015 ]
+                        inertiaMatrix [
+                          1.130999e-04 6.497242e-05 1.450426e-04
+                          -5.959332e-05 -7.371446e-07 -7.755826e-07
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "link_2B"
+                boundingObject USE linkB
+                physics Physics {
+                  density -1
+                  mass 0.053282
+                  centerOfMass [ 0.047727 0.002217 -0.005214 ]
+                  inertiaMatrix [
+                    1.110522e-05 1.780420e-05 1.658871e-05
+                    -2.345335e-06 -9.652192e-08 3.061219e-07
+                  ]
+                }
+              }
+            }
+          ]
+          name "link_2A"
+          boundingObject USE linkA
+          physics Physics {
+            density -1
+            mass 0.034152
+            centerOfMass [ 0.033800 0.000000 -0.000000 ]
+            inertiaMatrix [
+              1.968686e-05 1.654576e-05 1.654576e-05
+              -2.252363e-20 -1.098421e-20 6.914427e-21
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 0.000000 -1.000000
+          anchor -0.123000 0.114300 0.027125
+        }
+        device [
+          RotationalMotor {
+            name "Servo31"
+            maxVelocity 10.0
+            maxTorque 1000.0
+          }
+          PositionSensor {
+            name "join_3A_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation -0.123000 0.114300 0.027125
+          rotation 0.000000 0.000000 1.000000 1.570800
+          children [
+            Shape {
+              appearance DEF linik_3A_material PBRAppearance {
+                baseColor 0.0 0.0 0.0
+                roughness 1.000000
+                metalness 0
+              }
+              geometry USE linkA
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis 0.000000 -1.000000 0.0
+                anchor 0.067600 0.000000 0.000000
+              }
+              device [
+                RotationalMotor {
+                  name "Servo32"
+                  maxVelocity 10.0
+                  maxTorque 1000.0
+                }
+                PositionSensor {
+                  name "joint_3B_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.067600 0.000000 0.000000
+                rotation -1.000000 0.000000 0.000000 1.570800
+                children [
+                  Shape {
+                    appearance DEF link_3B_material PBRAppearance {
+                      baseColor 0.0 0.0 0.0
+                      roughness 1.000000
+                      metalness 0
+                    }
+                    geometry USE linkB
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 0.000000 -1.000000
+                      anchor 0.088094 0.027776 0.000000
+                    }
+                    device [
+                      RotationalMotor {
+                        name "Servo33"
+                        maxVelocity 10.0
+                        maxTorque 1000.0
+                      }
+                      PositionSensor {
+                        name "joint_3C_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      translation 0.088094 0.027776 0.000000
+                      children [
+                        Shape {
+                          appearance DEF link_3C_material PBRAppearance {
+                            baseColor 1.0 0.4 0.0
+                            roughness 1.000000
+                            metalness 0
+                          }
+                          geometry USE linkC
+                        }
+                        Solid {
+                          translation 0.11778 0.18063 0.000000
+                          rotation 1.000000 0.000000 0.000000 1.570800
+                          children [
+                            DEF L1FootSphere Shape {
+                            appearance PBRAppearance {
+                              baseColor 0.0 0.0 0.0
+                              roughness 1
+                              metalness 0
+                            }
+                            geometry Sphere {
+                              radius 0.02
+                            }
+                            }
+                          ]
+                          name "end_3"
+                          boundingObject USE L1FootSphere
+                          physics Physics {
+                            density -1
+                            mass 0.000122
+                            centerOfMass [ -0.004100 -0.019599 0.043843 ]
+                            inertiaMatrix [
+                              4.523771e-10 8.997212e-10 4.523771e-10
+                              6.985810e-25 7.309403e-26 5.165629e-25
+                            ]
+                          }
+                        }
+                      ]
+                      name "link_3C"
+                      boundingObject USE linkC
+                      physics Physics {
+                        density -1
+                        mass 0.084945
+                        centerOfMass [ 0.067514 0.079018 -0.000015 ]
+                        inertiaMatrix [
+                          1.130999e-04 6.497242e-05 1.450426e-04
+                          -5.959332e-05 -7.371446e-07 -7.755826e-07
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "link_3B"
+                boundingObject USE linkB
+                physics Physics {
+                  density -1
+                  mass 0.053282
+                  centerOfMass [ 0.047727 0.002217 -0.005214 ]
+                  inertiaMatrix [
+                    1.110522e-05 1.780420e-05 1.658871e-05
+                    -2.345335e-06 -9.652192e-08 3.061219e-07
+                  ]
+                }
+              }
+            }
+          ]
+          name "linik_3A"
+          boundingObject USE linikA
+          physics Physics {
+            density -1
+            mass 0.034152
+            centerOfMass [ 0.033800 0.000000 0.000000 ]
+            inertiaMatrix [
+              1.968686e-05 1.654576e-05 1.654576e-05
+              -6.832604e-22 -5.541677e-21 9.568877e-21
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 -0.000000 1.000000
+          anchor 0.123000 -0.114300 0.027125
+        }
+        device [
+          RotationalMotor {
+            name "Servo41"
+            maxVelocity 10.0
+            maxTorque 1000.0
+          }
+          PositionSensor {
+            name "joint_4A_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.123000 -0.114300 0.027125
+          rotation 0.000000 0.000000 -1.000000 1.570800
+          children [
+            Shape {
+              appearance DEF link_4A_material PBRAppearance {
+                baseColor 0.0 0.0 0.0
+                roughness 1.000000
+                metalness 0
+              }
+              geometry USE linkA
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis 0.000000 -1.000000 0.0
+                anchor 0.067600 0.000000 0.000000
+              }
+              device [
+                RotationalMotor {
+                  name "Servo42"
+                  maxVelocity 10.0
+                  maxTorque 1000.0
+                }
+                PositionSensor {
+                  name "joint_4B_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.067600 0.000000 0.000000
+                rotation -1.000000 0.000000 0.000000 1.570800
+                children [
+                  Shape {
+                    appearance DEF link_4B_material PBRAppearance {
+                      baseColor 0.0 0.0 0.0
+                      roughness 1.000000
+                      metalness 0
+                    }
+                    geometry USE linkB
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 0.000000 -1.000000
+                      anchor 0.088094 0.027776 0.000000
+                    }
+                    device [
+                      RotationalMotor {
+                        name "Servo43"
+                        maxVelocity 10.0
+                        maxTorque 1000.0
+                      }
+                      PositionSensor {
+                        name "joint_4C_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      translation 0.088094 0.027776 0.000000
+                      children [
+                        Shape {
+                          appearance DEF link_4C_material PBRAppearance {
+                            baseColor 1.0 0.4 0.0
+                            roughness 1.000000
+                            metalness 0
+                          }
+                          geometry USE linkC
+                        }
+                        Solid {
+                          translation 0.11778 0.18063 0.000000
+                          rotation 1.000000 0.000000 0.000000 1.570800
+                          children [
+                            DEF L1FootSphere Shape {
+                            appearance PBRAppearance {
+                              baseColor 0.0 0.0 0.0
+                              roughness 1
+                              metalness 0
+                            }
+                            geometry Sphere {
+                              radius 0.02
+                            }
+                            }
+                          ]
+                          name "end_4"
+                          boundingObject USE L1FootSphere
+                          physics Physics {
+                            density -1
+                            mass 0.000122
+                            centerOfMass [ -0.004100 0.019599 0.043843 ]
+                            inertiaMatrix [
+                              4.523771e-10 8.997212e-10 4.523771e-10
+                              3.803783e-24 3.809443e-26 1.078123e-24
+                            ]
+                          }
+                        }
+                      ]
+                      name "link_4C"
+                      boundingObject USE linkC
+                      physics Physics {
+                        density -1
+                        mass 0.045024
+                        centerOfMass [ 0.069136 0.072203 -0.000028 ]
+                        inertiaMatrix [
+                          9.522433e-05 4.423070e-05 1.332954e-04
+                          -5.603153e-05 -7.371621e-07 -7.755773e-07
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "link_4B"
+                boundingObject USE linkB
+                physics Physics {
+                  density -1
+                  mass 0.065280
+                  centerOfMass [ 0.054890 0.009757 0.002240 ]
+                  inertiaMatrix [
+                    1.182572e-05 1.769072e-05 1.479065e-05
+                    -2.206041e-06 8.006657e-08 8.973163e-08
+                  ]
+                }
+              }
+            }
+          ]
+          name "link_4A"
+          boundingObject USE linkA
+          physics Physics {
+            density -1
+            mass 0.034152
+            centerOfMass [ 0.033800 -0.000000 0.000000 ]
+            inertiaMatrix [
+              1.968686e-05 1.654576e-05 1.654576e-05
+              -1.102655e-21 8.428061e-21 8.322640e-21
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 -0.000000 1.000000
+          anchor 0.000000 -0.114300 0.027125
+        }
+        device [
+          RotationalMotor {
+            name "Servo51"
+            maxVelocity 10.0
+            maxTorque 1000.0
+          }
+          PositionSensor {
+            name "joint_5A_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.000000 -0.114300 0.027125
+          rotation 0.000000 0.000000 -1.000000 1.570800
+          children [
+            Shape {
+              appearance DEF link_5A_material PBRAppearance {
+                baseColor 0.0 0.0 0.0
+                roughness 1.000000
+                metalness 0
+              }
+              geometry USE linkA
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis 0.000000 -1.000000 0.0
+                anchor 0.067600 0.000000 0.000000
+              }
+              device [
+                RotationalMotor {
+                  name "Servo52"
+                  maxVelocity 10.0
+                  maxTorque 1000.0
+                }
+                PositionSensor {
+                  name "joint_5B_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.067600 0.000000 0.000000
+                rotation -1.000000 0.000000 0.000000 1.570800
+                children [
+                  Shape {
+                    appearance DEF link_5B_material PBRAppearance {
+                      baseColor 0.0 0.0 0.0
+                      roughness 1.000000
+                      metalness 0
+                    }
+                    geometry USE linkB
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 0.000000 -1.000000
+                      anchor 0.088094 0.027776 0.000000
+                    }
+                    device [
+                      RotationalMotor {
+                        name "Servo53"
+                        maxVelocity 10.0
+                        maxTorque 1000.0
+                      }
+                      PositionSensor {
+                        name "joint_5C_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      translation 0.088094 0.027776 0.000000
+                      children [
+                        Shape {
+                          appearance DEF link_5C_material PBRAppearance {
+                            baseColor 1.0 0.4 0.0
+                            roughness 1.000000
+                            metalness 0
+                          }
+                          geometry USE linkC
+                        }
+                        Solid {
+                          translation 0.11778 0.18063 0.000000
+                          rotation 1.000000 0.000000 0.000000 1.570800
+                          children [
+                            DEF L1FootSphere Shape {
+                            appearance PBRAppearance {
+                              baseColor 0.0 0.0 0.0
+                              roughness 1
+                              metalness 0
+                            }
+                            geometry Sphere {
+                              radius 0.02
+                            }
+                            }
+                          ]
+                          name "end_5"
+                          boundingObject USE L1FootSphere
+                          physics Physics {
+                            density -1
+                            mass 0.000122
+                            centerOfMass [ -0.004100 0.019599 0.043843 ]
+                            inertiaMatrix [
+                              4.523771e-10 8.997212e-10 4.523771e-10
+                              -1.158610e-25 9.554003e-28 5.154771e-25
+                            ]
+                          }
+                        }
+                      ]
+                      name "link_5C"
+                      boundingObject USE linkC
+                      physics Physics {
+                        density -1
+                        mass 0.045024
+                        centerOfMass [ 0.069136 0.072203 -0.000028 ]
+                        inertiaMatrix [
+                          9.522433e-05 4.423070e-05 1.332954e-04
+                          -5.603153e-05 -7.371621e-07 -7.755773e-07
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "link_5B"
+                boundingObject USE linkB
+                physics Physics {
+                  density -1
+                  mass 0.063236
+                  centerOfMass [ 0.028134 0.002064 -0.006160 ]
+                  inertiaMatrix [
+                    1.306114e-05 2.089318e-05 1.568897e-05
+                    -1.483742e-06 -2.219262e-07 7.998787e-07
+                  ]
+                }
+              }
+            }
+          ]
+          name "link_5A"
+          boundingObject USE linkA
+          physics Physics {
+            density -1
+            mass 0.034152
+            centerOfMass [ 0.033800 0.000000 -0.000000 ]
+            inertiaMatrix [
+              1.968686e-05 1.654576e-05 1.654576e-05
+              -1.479492e-20 -1.276763e-20 5.950325e-21
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 -0.000000 1.000000
+          anchor -0.123000 -0.114300 0.027125
+        }
+        device [
+          RotationalMotor {
+            name "Servo61"
+            maxVelocity 10.0
+            maxTorque 1000.0
+          }
+          PositionSensor {
+            name "joint_6A_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation -0.123000 -0.114300 0.027125
+          rotation 0.000000 0.000000 -1.000000 1.570800
+          children [
+            Shape {
+              appearance DEF link_6A_material PBRAppearance {
+                baseColor 0.0 0.0 0.0
+                roughness 1.000000
+                metalness 0
+              }
+              geometry USE linkA
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis 0.000000 -1.000000 0.0
+                anchor 0.067600 0.000000 0.000000
+              }
+              device [
+                RotationalMotor {
+                  name "Servo62"
+                  maxVelocity 10.0
+                  maxTorque 1000.0
+                }
+                PositionSensor {
+                  name "joint_6B_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.067600 0.000000 0.000000
+                rotation -1.000000 0.000000 0.000000 1.570800
+                children [
+                  Shape {
+                    appearance DEF link_6B_material PBRAppearance {
+                      baseColor 0.0 0.0 0.0
+                      roughness 1.000000
+                      metalness 0
+                    }
+                    geometry USE linkB
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 0.000000 -1.000000
+                      anchor 0.088094 0.027776 0.000000
+                    }
+                    device [
+                      RotationalMotor {
+                        name "Servo63"
+                        maxVelocity 10.0
+                        maxTorque 1000.0
+                      }
+                      PositionSensor {
+                        name "joint_6C_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      translation 0.088094 0.027776 0.000000
+                      children [
+                        Shape {
+                          appearance DEF link_6C_material PBRAppearance {
+                            baseColor 1.0 0.4 0.0
+                            roughness 1.000000
+                            metalness 0
+                          }
+                          geometry USE linkC
+                        }
+                        Solid {
+                          translation 0.11778 0.18063 0.000000
+                          rotation 1.000000 0.000000 0.000000 1.570800
+                          children [
+                            DEF L1FootSphere Shape {
+                            appearance PBRAppearance {
+                              baseColor 0.0 0.0 0.0
+                              roughness 1
+                              metalness 0
+                            }
+                            geometry Sphere {
+                              radius 0.02
+                            }
+                            }
+                          ]
+                          name "end_6"
+                          boundingObject USE L1FootSphere
+                          physics Physics {
+                            density -1
+                            mass 0.000122
+                            centerOfMass [ -0.004100 0.019599 0.043843 ]
+                            inertiaMatrix [
+                              4.523771e-10 8.997212e-10 4.523771e-10
+                              -1.134614e-25 6.529413e-27 -2.401684e-26
+                            ]
+                          }
+                        }
+                      ]
+                      name "link_6C"
+                      boundingObject USE linkC
+                      physics Physics {
+                        density -1
+                        mass 0.023981
+                        centerOfMass [ 0.069781 0.072882 -0.022700 ]
+                        inertiaMatrix [
+                          4.892716e-05 2.342870e-05 6.702061e-05
+                          -2.817780e-05 -3.227305e-06 -4.717265e-06
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "link_6B"
+                boundingObject USE linkB
+                physics Physics {
+                  density -1
+                  mass 0.030910
+                  centerOfMass [ 0.047094 0.004223 -0.010662 ]
+                  inertiaMatrix [
+                    7.875656e-06 1.211366e-05 9.988038e-06
+                    -1.483742e-06 -2.522029e-07 7.998789e-07
+                  ]
+                }
+              }
+            }
+          ]
+          name "link_6A"
+          boundingObject USE linkA
+          physics Physics {
+            density -1
+            mass 0.017076
+            centerOfMass [ 0.020097 -0.000000 -0.000000 ]
+            inertiaMatrix [
+              9.843432e-06 1.228075e-05 4.265004e-06
+              -8.963311e-22 -8.857935e-21 -3.096103e-21
+            ]
+          }
+        }
+      }
+    ]
+    name IS name
+    boundingObject USE base
+    physics Physics {
+      density -1
+      mass 8.987628
+      centerOfMass [ 0.000031 0.000085 0.020455 ]
+      inertiaMatrix [
+        4.184923e-03 1.268977e-02 1.678996e-02
+        -2.215486e-12 -1.922339e-14 1.753070e-13
+      ]
+    }
+  }
+}

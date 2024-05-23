@@ -22,12 +22,13 @@ class Leg:
         self.transform = transform
 
     def set_angles(self, q: np.ndarray) -> None:
-        q = np.deg2rad(q)
         q = self.transform(q)
+        q = np.deg2rad(q)
 
         self._s1.setPosition(q[0])
         self._s2.setPosition(q[1])
         self._s3.setPosition(q[2])
+        
 
 
 class ElkapodSimulationCommServer(Node):
@@ -56,18 +57,44 @@ class ElkapodSimulationCommServer(Node):
         servo63 = self._robot.getDevice("Servo63")
 
         # Create leg objects
+        # leg1 = Leg(servo11, servo12, servo13,
+        #            lambda q: q * np.array([-1., 1., 1.]))
+        # leg2 = Leg(servo21, servo22, servo23,
+        #            lambda q: q * np.array([-1., 1., 1.]))
+        # leg3 = Leg(servo31, servo32, servo33,
+        #            lambda q: q * np.array([-1., 1., 1.]))
+        # leg4 = Leg(servo41, servo42, servo43,
+        #            lambda q: q + np.array([np.pi, 0., 0.]))
+        # leg5 = Leg(servo51, servo52, servo53,
+        #            lambda q: q + np.array([np.pi, 0., 0.]))
+        # leg6 = Leg(servo61, servo62, servo63,
+        #            lambda q: q + np.array([np.pi, 0., 0.]))
+
+        # leg1 = Leg(servo11, servo12, servo13,
+        #            lambda q: q + np.array([0.0, np.deg2rad(17.5), np.deg2rad(40.7)]))
+        # leg2 = Leg(servo21, servo22, servo23,
+        #            lambda q: q + np.array([0.0, np.deg2rad(17.5), np.deg2rad(40.7)]))
+        # leg3 = Leg(servo31, servo32, servo33,
+        #            lambda q: q + np.array([0.0, np.deg2rad(17.5), np.deg2rad(40.7)]))
+        # leg4 = Leg(servo41, servo42, servo43,
+        #            lambda q: q + np.array([0.0, np.deg2rad(17.5), np.deg2rad(40.7)]))
+        # leg5 = Leg(servo51, servo52, servo53,
+        #            lambda q: q + np.array([0.0, np.deg2rad(17.5), np.deg2rad(40.7)]))
+        # leg6 = Leg(servo61, servo62, servo63,
+        #            lambda q: q + np.array([0.0, np.deg2rad(17.5), np.deg2rad(40.7)]))
+
         leg1 = Leg(servo11, servo12, servo13,
-                   lambda q: q * np.array([-1., 1., 1.]))
+                   lambda q: q + np.array([0.0, 17.5, 40.7]))
         leg2 = Leg(servo21, servo22, servo23,
-                   lambda q: q * np.array([-1., 1., 1.]))
+                   lambda q: q + np.array([0.0, 17.5, 40.7]))
         leg3 = Leg(servo31, servo32, servo33,
-                   lambda q: q * np.array([-1., 1., 1.]))
+                   lambda q: q + np.array([0.0, 17.5, 40.7]))
         leg4 = Leg(servo41, servo42, servo43,
-                   lambda q: q + np.array([np.pi, 0., 0.]))
+                   lambda q: q + np.array([0.0, 17.5, 40.7]))
         leg5 = Leg(servo51, servo52, servo53,
-                   lambda q: q + np.array([np.pi, 0., 0.]))
+                   lambda q: q + np.array([0.0, 17.5, 40.7]))
         leg6 = Leg(servo61, servo62, servo63,
-                   lambda q: q + np.array([np.pi, 0., 0.]))
+                   lambda q: q + np.array([0.0, 17.5, 40.7]))
 
         self._legs = [leg1, leg2, leg3, leg4, leg5, leg6]
 
@@ -83,5 +110,5 @@ class ElkapodSimulationCommServer(Node):
         for leg, frame in zip(self._legs, leg_frames):
             angles = frame.servo_angles.tolist()
             leg.set_angles(np.array([*angles]))
-            self.get_logger().info(f"Setting raw angles {angles} for leg {frame.leg_nb}!")
-        self.get_logger().info("All angles has been set successfully!")
+            # self.get_logger().info(f"Setting raw angles {angles} for leg {frame.leg_nb}!")
+        # self.get_logger().info("All angles has been set successfully!")

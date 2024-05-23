@@ -1,15 +1,29 @@
-# Elkapod Simulation Repository
-## Simulation
-### Communication with `/elkapod_comm_server` mockup
+# Elkapod teleoperation repository
+![ROS2 distro](https://img.shields.io/badge/ros--version-humble-blue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Python Version](https://img.shields.io/badge/python-3.10-g.svg)
+
+## Installation
+1. Create a workspace and clone packages into it
 ```bash
-ros2 topic pub --once /elkapod_comm_server_leg_frames elkapod_msgs/msg/LegFrames "{
-    leg_frames: [
-        {leg_nb: 1, servo_op_codes: [1, 1, 1], servo_angles: [0.0, 45.0, -120.0]},
-        {leg_nb: 2, servo_op_codes: [1, 1, 1], servo_angles: [0.0, 45.0, -120.0]},
-        {leg_nb: 3, servo_op_codes: [1, 1, 1], servo_angles: [0.0, 45.0, -120.0]},
-        {leg_nb: 4, servo_op_codes: [1, 1, 1], servo_angles: [0.0, 45.0, -120.0]},
-        {leg_nb: 5, servo_op_codes: [1, 1, 1], servo_angles: [0.0, 45.0, -120.0]},
-        {leg_nb: 6, servo_op_codes: [1, 1, 1], servo_angles: [0.0, 45.0, -120.0]}
-    ]
-}" 
+mkdir -p elkapod_sim/src/
+git clone https://github.com/HexapodBionik/elkapod_sim.git elkapod_sim/src/
 ```
+2. Move into `src/` folder and download all additional packages using [vcstool](http://wiki.ros.org/vcstool)
+```bash
+cd elkapod_sim/src/
+vcs import . < repos.yaml
+```
+> ![NOTE]
+> Additionally, you need to install the ElkapodAlgorithms Python package. For more instructions, visit the package's website.
+>
+
+## How to run the simulation?
+First of all you have to run launch from the `elkapod_core_bringup`.
+
+```bash
+ros2 elkapod_core_bringup elkapod_core_bringup.launch.py sim:=True
+```
+
+## How to control the robot?
+Create separate workspace and follow instructions from [ElkapodTeleop](https://github.com/HexapodBionik/elkapod_teleop.git).
