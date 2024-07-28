@@ -27,11 +27,11 @@ WorldInfo {
     optimalThreadCount 4
 }
 Viewpoint {
-  orientation -0.11994103698592165 0.9514776543459834 0.28338034675504087 0.8371253104430005
-  position -1.3897435116426868 -0.37116764011956277 1.3519250436143562
+  orientation -0.0871067 0.23651 0.967717 0.727352
+  position -6.37 -6.55 4.86
 }
 TexturedBackground {
-    texture "dusk"
+    texture "mars"
 }
 TexturedBackgroundLight {
 }
@@ -46,7 +46,7 @@ UnevenTerrain {
 
 # Elkapod robot declaration
 ElkapodSimplified {
-  translation 0.0530459 0.00806403 10
+  translation 0.0530459 0.00806403 3.5
   rotation 0 0 1 3.1415
   controller "<extern>"
   mainBodyDim 0.3 0.45 0.05
