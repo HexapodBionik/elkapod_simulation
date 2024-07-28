@@ -23,7 +23,17 @@ vcs import . < repos.yaml
 First of all you have to run launch from the `elkapod_core_bringup`.
 
 ```bash
-ros2 elkapod_core_bringup elkapod_core_bringup.launch.py sim:=True
+ros2 launch elkapod_core_bringup elkapod_core_bringup.launch.py sim:=True
+```
+
+Currently, there are two different world to choose from:
+- `flat_world.wbt` - Flat world with ramp, stairs and traffic cones.
+- `uneven_terrain.wbt` - World with randomly uneven terrain.
+
+To choose the world you want to run the simulation pass the world as a launchfile argument. Here is an example:
+
+```bash
+ros2 launch elkapod_core_bringup elkapod_core_bringup.launch.py sim:=True world:="flat_world.wbt"
 ```
 
 ## How to control the robot?

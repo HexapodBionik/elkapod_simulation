@@ -2,5 +2,15 @@
 <robot name="Elkapod">
     <webots>
         <plugin type="elkapod_sim.webots_bringup.MyRobotDriver" />
+
+        <plugin type="webots_ros2_driver::Ros2IMU">
+            <enabled>False</enabled>
+            <topicName>/elkapod_imu</topicName>
+            <updateRate>100</updateRate>
+            <alwaysOn>True</alwaysOn>
+            <frameName>new_frame_name</frameName>
+            <inertialUnitName>ElkapodIMU</inertialUnitName>
+        </plugin>
+
     </webots>
 </robot>

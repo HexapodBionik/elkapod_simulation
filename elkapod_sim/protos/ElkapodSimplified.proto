@@ -2,6 +2,7 @@
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
 # Hexapod robot simplified model made for KNR Bionik Hexapod Project
+# template language: javascript;
 
 PROTO ElkapodSimplified [
   field  SFVec3f     translation     0 0 0
@@ -13,6 +14,7 @@ PROTO ElkapodSimplified [
   field  SFBool      supervisor      FALSE                                   # Is `Robot.supervisor`.
   field  SFBool      synchronization TRUE                                    # Is `Robot.synchronization`.
   field  SFBool      selfCollision   TRUE                                    # Is `Robot.selfCollision`.
+  field  SFVec3f     mainBodyDim     0.3 0.45 0.05
 ]
 {
   Robot {
@@ -25,8 +27,16 @@ PROTO ElkapodSimplified [
     synchronization IS synchronization
     selfCollision IS selfCollision
     children [
+    DEF ElkapodIMU InertialUnit{
+      xAxis TRUE
+      zAxis TRUE
+      yAxis TRUE
+      resolution 0.001
+      noise 0.0
+      name "ElkapodIMU"
+    } 
     DEF HeadTranslation Pose {
-      translation 0 0.15 0
+      translation 0 %<= fields.mainBodyDim.value.y/2 >% 0
       children [
         DEF Head Shape {
           appearance PBRAppearance {
@@ -44,7 +54,7 @@ PROTO ElkapodSimplified [
       jointParameters HingeJointParameters {
         position 3.14
         axis 0 0 1
-        anchor -0.1 -0.15 0
+        anchor %<=-fields.mainBodyDim.value.x/2 >% %<=-fields.mainBodyDim.value.y/2 >% 0
       }
       device [
         RotationalMotor {
@@ -52,7 +62,7 @@ PROTO ElkapodSimplified [
         }
       ]
       endPoint Solid {
-        translation -0.1 -0.15 -1.4268099999999993e-05
+        translation %<=-fields.mainBodyDim.value.x/2 >% %<=-fields.mainBodyDim.value.y/2 >% -1.4268099999999993e-05
         rotation 0.0005622220406647018 0.7071079684969854 0.7071053703617612 3.1404662348267345
         children [
           DEF MountServoTransform Pose {
@@ -127,7 +137,7 @@ PROTO ElkapodSimplified [
                       DEF FootTransform Pose {
                         translation 0.215 0 0
                         children [
-                          DEF L1FootSphere Shape {
+                        DEF L1FootSphere Shape {
                             appearance PBRAppearance {
                               baseColor 0.141176 0.121569 0.192157
                               roughness 1
@@ -139,6 +149,18 @@ PROTO ElkapodSimplified [
                           }
                         ]
                       }
+                      DEF RIGHT_TOUCH TouchSensor {
+                          translation 0.215 0.0 0.0
+                          type "bumper"
+                          name "l1_touch_sensor"
+
+                          boundingObject Sphere {
+                                radius 0.015
+                          }
+                          physics Physics {
+      
+                          }
+                        }
                       DEF A3_Transform Pose {
                         translation 0.1075 0 0
                         children [
@@ -164,9 +186,9 @@ PROTO ElkapodSimplified [
                         }
                       }
                     ]
-                    boundingObject USE FootTransform
                     physics Physics {
                     }
+                    boundingObject USE FootTransform
                   }
                 }
                 Shape {
@@ -196,7 +218,7 @@ PROTO ElkapodSimplified [
       jointParameters HingeJointParameters {
         position 3.14
         axis 0 0 1
-        anchor -0.1 0 0
+        anchor %<=-fields.mainBodyDim.value.x/2 >% 0 0
       }
       device [
         RotationalMotor {
@@ -204,7 +226,7 @@ PROTO ElkapodSimplified [
         }
       ]
       endPoint Solid {
-        translation -0.100119 -7.180457112552314e-19 -1.42681e-05
+        translation %<=-fields.mainBodyDim.value.x/2 >% 0 0
         rotation 0.0005622220463405306 0.7071079756357184 0.7071053632229972 3.140466234838101
         children [
           DEF L2MountServoTransform Pose {
@@ -291,6 +313,18 @@ PROTO ElkapodSimplified [
                           }
                         ]
                       }
+                      DEF RIGHT_TOUCH TouchSensor {
+                          translation 0.215 0.0 0.0
+                          type "bumper"
+                          name "l2_touch_sensor"
+
+                          boundingObject Sphere {
+                                radius 0.015
+                          }
+                          physics Physics {
+      
+                          }
+                        }
                       DEF A3_Transform Pose {
                         translation 0.1075 0 0
                         children [
@@ -348,7 +382,7 @@ PROTO ElkapodSimplified [
       jointParameters HingeJointParameters {
         position 3.14
         axis 0 0 1
-        anchor -0.1 0.15 0
+        anchor %<=-fields.mainBodyDim.value.x/2 >% %<=fields.mainBodyDim.value.y/2 >% 0 
       }
       device [
         RotationalMotor {
@@ -356,7 +390,7 @@ PROTO ElkapodSimplified [
         }
       ]
       endPoint Solid {
-        translation -0.0998806 0.15 -1.42681e-05
+        translation %<=-fields.mainBodyDim.value.x/2 >% %<=fields.mainBodyDim.value.y/2 >% 0
         rotation 0.0005622220463405447 0.7071079756357186 0.707105363222997 3.140466234838101
         children [
           DEF L2MountServoTransform Pose {
@@ -443,6 +477,18 @@ PROTO ElkapodSimplified [
                           }
                         ]
                       }
+                      DEF RIGHT_TOUCH TouchSensor {
+                          translation 0.215 0.0 0.0
+                          type "bumper"
+                          name "l3_touch_sensor"
+
+                          boundingObject Sphere {
+                                radius 0.015
+                          }
+                          physics Physics {
+      
+                          }
+                        }
                       DEF A3_Transform Pose {
                         translation 0.1075 0 0
                         children [
@@ -499,7 +545,7 @@ PROTO ElkapodSimplified [
     DEF L3J1 HingeJoint {
       jointParameters HingeJointParameters {
         axis 0 0 1
-        anchor 0.1 -0.15 0
+        anchor %<=fields.mainBodyDim.value.x/2 >% %<=-fields.mainBodyDim.value.y/2 >% 0
       }
       device [
         RotationalMotor {
@@ -507,7 +553,7 @@ PROTO ElkapodSimplified [
         }
       ]
       endPoint Solid {
-        translation 0.1 -0.15 -1.42681e-05
+        translation %<=fields.mainBodyDim.value.x/2 >% %<=-fields.mainBodyDim.value.y/2 >% 0
         rotation 0.9999999999992331 1.2262625356477944e-06 -1.7305524665346252e-07 1.5708000201914332
         children [
           DEF MountServoTransform Pose {
@@ -594,6 +640,18 @@ PROTO ElkapodSimplified [
                           }
                         ]
                       }
+                      DEF RIGHT_TOUCH TouchSensor {
+                          translation 0.215 0.0 0.0
+                          type "bumper"
+                          name "l4_touch_sensor"
+
+                          boundingObject Sphere {
+                                radius 0.015
+                          }
+                          physics Physics {
+      
+                          }
+                        }
                       DEF A3_Transform Pose {
                         translation 0.1075 0 0
                         children [
@@ -650,7 +708,7 @@ PROTO ElkapodSimplified [
     DEF L2J1 HingeJoint {
       jointParameters HingeJointParameters {
         axis 0 0 1
-        anchor 0.1 0 0
+        anchor %<=fields.mainBodyDim.value.x/2 >% 0 0
       }
       device [
         RotationalMotor {
@@ -658,7 +716,7 @@ PROTO ElkapodSimplified [
         }
       ]
       endPoint Solid {
-        translation 0.1 0 -1.4268099999999996e-05
+        translation %<=fields.mainBodyDim.value.x/2 >% 0 0
         rotation 0.9999999999992331 1.2262625356281685e-06 -1.7305524664364954e-07 1.5708000201914332
         children [
           DEF MountServoTransform Pose {
@@ -745,6 +803,18 @@ PROTO ElkapodSimplified [
                           }
                         ]
                       }
+                      DEF RIGHT_TOUCH TouchSensor {
+                          translation 0.215 0.0 0.0
+                          type "bumper"
+                          name "l5_touch_sensor"
+
+                          boundingObject Sphere {
+                                radius 0.015
+                          }
+                          physics Physics {
+      
+                          }
+                        }
                       DEF A3_Transform Pose {
                         translation 0.1075 0 0
                         children [
@@ -801,7 +871,7 @@ PROTO ElkapodSimplified [
     DEF L1J1 HingeJoint {
       jointParameters HingeJointParameters {
         axis 0 0 1
-        anchor 0.1 0.15 0
+        anchor %<=fields.mainBodyDim.value.x/2 >% %<=fields.mainBodyDim.value.y/2>% 0
       }
       device [
         RotationalMotor {
@@ -809,7 +879,7 @@ PROTO ElkapodSimplified [
         }
       ]
       endPoint Solid {
-        translation 0.1 0.15 -1.42681e-05
+        translation %<=fields.mainBodyDim.value.x/2 >% %<=fields.mainBodyDim.value.y/2>% 0
         rotation 0.9999999999992331 1.2262625356576075e-06 -1.7305524672215398e-07 1.5708000201914332
         children [
           DEF MountServoTransform Pose {
@@ -896,6 +966,18 @@ PROTO ElkapodSimplified [
                           }
                         ]
                       }
+                      DEF RIGHT_TOUCH TouchSensor {
+                          translation 0.215 0.0 0.0
+                          type "bumper"
+                          name "l6_touch_sensor"
+
+                          boundingObject Sphere {
+                                radius 0.015
+                          }
+                          physics Physics {
+      
+                          }
+                        }
                       DEF A3_Transform Pose {
                         translation 0.1075 0 0
                         children [
@@ -956,7 +1038,7 @@ PROTO ElkapodSimplified [
         metalness 0
       }
       geometry Box {
-        size 0.2 0.3 0.05
+        size IS mainBodyDim
       }
     }
   ]

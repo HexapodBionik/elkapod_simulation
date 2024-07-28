@@ -126,21 +126,38 @@ PROTO ElkapodV1 [
                           geometry DEF linkC Mesh {
                             url "../meshes/linkC.STL"
                           }
+                          castShadows FALSE
                         }
                         Solid {
                           translation 0.11778 0.18063 0.000000
+                          # translation 0.0 0.0 0.0
+                          # translation 0.11638 0.19263 0
                           rotation 1.000000 0.000000 0.000000 1.570800
                           children [
-                            DEF L1FootSphere Shape {
-                            appearance PBRAppearance {
-                              baseColor 0.0 0.0 0.0
-                              roughness 1
-                              metalness 0
+                            DEF RIGHT_TOUCH TouchSensor {
+                              children [
+                                  DEF L1FootSphere Shape {
+                                  appearance PBRAppearance {
+                                    baseColor 0.0 0.0 0.0
+                                    roughness 1
+                                    metalness 0
+                                  }
+                                  geometry Sphere {
+                                    radius 0.02
+                                  }
+                                  }
+                              ]
+                              boundingObject Sphere {
+                                radius 0.02
+                              }
+                              physics Physics {
+                                density -1
+                                mass 0.02
+                              }
+                              type "bumper"
+                              name "l1_touch_sensor"
                             }
-                            geometry Sphere {
-                              radius 0.02
-                            }
-                            }
+
                           ]
                           name "end_1"
                           boundingObject USE L1FootSphere
@@ -157,6 +174,7 @@ PROTO ElkapodV1 [
                       ]
                       name "link_1C"
                       boundingObject USE linkC
+
                       physics Physics {
                         density -1
                         mass 0.095536
@@ -275,6 +293,7 @@ PROTO ElkapodV1 [
                             metalness 0
                           }
                           geometry USE linkC
+                          castShadows FALSE
                         }
                         Solid {
                           translation 0.11778 0.18063 0.000000
@@ -424,6 +443,7 @@ PROTO ElkapodV1 [
                             metalness 0
                           }
                           geometry USE linkC
+                          castShadows FALSE
                         }
                         Solid {
                           translation 0.11778 0.18063 0.000000
@@ -573,6 +593,7 @@ PROTO ElkapodV1 [
                             metalness 0
                           }
                           geometry USE linkC
+                          castShadows FALSE
                         }
                         Solid {
                           translation 0.11778 0.18063 0.000000
@@ -722,6 +743,7 @@ PROTO ElkapodV1 [
                             metalness 0
                           }
                           geometry USE linkC
+                          castShadows FALSE
                         }
                         Solid {
                           translation 0.11778 0.18063 0.000000
@@ -871,6 +893,7 @@ PROTO ElkapodV1 [
                             metalness 0
                           }
                           geometry USE linkC
+                          castShadows FALSE
                         }
                         Solid {
                           translation 0.11778 0.18063 0.000000

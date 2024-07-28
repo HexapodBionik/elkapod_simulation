@@ -1,0 +1,53 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/released/projects/objects/floors/protos/UnevenTerrain.proto"
+
+# Robot proto
+EXTERNPROTO "../protos/ElkapodV1.proto"
+EXTERNPROTO "../protos/ElkapodSimplified.proto"
+
+# Obstacles protos
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/released/projects/objects/obstacles/protos/Ramp30deg.proto"
+
+# Slalom protos
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/released/projects/objects/traffic/protos/TrafficCone.proto"
+
+# Floor protos
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/released/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/released/projects/appearances/protos/Asphalt.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/released/projects/appearances/protos/Sand.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/released/projects/appearances/protos/SandyGround.proto"
+
+
+
+WorldInfo {
+    FPS 120
+    optimalThreadCount 4
+}
+Viewpoint {
+  orientation -0.11994103698592165 0.9514776543459834 0.28338034675504087 0.8371253104430005
+  position -1.3897435116426868 -0.37116764011956277 1.3519250436143562
+}
+TexturedBackground {
+    texture "dusk"
+}
+TexturedBackgroundLight {
+}
+UnevenTerrain {
+    translation 2.0 0.0 0.0
+    xDimension 15
+    yDimension 15
+    size 30 30 5 
+    appearance SandyGround{}
+    perlinNOctaves 8
+}
+
+# Elkapod robot declaration
+ElkapodSimplified {
+  translation 0.0530459 0.00806403 10
+  rotation 0 0 1 3.1415
+  controller "<extern>"
+  mainBodyDim 0.3 0.45 0.05
+}
