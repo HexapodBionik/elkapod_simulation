@@ -3,7 +3,7 @@ repositories:
     type: git
     url: https://github.com/HexapodBionik/elkapod_msgs.git
     version: main
-  OtherElkapod/elkapod:
+  OtherElkapod/elkapod_core:
     type: git
-    url: https://github.com/HexapodBionik/Elkapod.git
-    version: feature/elkapod_core_bringup
+    url: https://github.com/HexapodBionik/elkapod_core.git
+    version: main
