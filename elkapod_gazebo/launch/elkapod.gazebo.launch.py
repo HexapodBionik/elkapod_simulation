@@ -1,64 +1,81 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, SetEnvironmentVariable, ExecuteProcess
-from launch.substitutions import LaunchConfiguration, Command
+from launch.actions import DeclareLaunchArgument, SetEnvironmentVariable, IncludeLaunchDescription, TimerAction
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 import os
 
 def generate_launch_description():
-    # Define the package name and URDF path (update accordingly)
     robot_description_package = 'elkapod_description'
+    elkapod_core = "elkapod_core_bringup"
+
     package_name = 'elkapod_gazebo'
 
-    urdf_file_path = os.path.join(
-        get_package_share_directory(robot_description_package),
-        'urdf',
-        'elkapod.urdf.xacro'
+    rsp = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory(elkapod_core), 'launch', 'rsp.launch.py'
+        )]), launch_arguments={'use_sim_time': 'true', 'use_ros2_control': 'true'}.items()
     )
 
-    # Path to your SDF world file
-    world_file_path = os.path.join(
+    default_world = os.path.join(
         get_package_share_directory(package_name),
         'worlds',
-        'empty.sdf'  # Make sure 'empty.sdf' exists in your package worlds directory
+        'empty.world'
     )
 
-    # Declare launch argument for the world file
+    world = LaunchConfiguration('world')
+
     world_arg = DeclareLaunchArgument(
         'world',
-        default_value=world_file_path,
-        description='Path to the world SDF file to load into Gazebo'
+        default_value=default_world,
+        description='World to load'
     )
 
-    # Gazebo Simulator
-    gz_proc = ExecuteProcess(cmd=['gz', 'sim', world_file_path, '-v'], output='screen')
-
-    # Robot State Publisher
-    robot_description = Command(['xacro ', urdf_file_path])
-    robot_state_publisher = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='robot_state_publisher',
-        output='screen',
-        parameters=[{'robot_description': robot_description}]
+    gazebo = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')]),
+        launch_arguments={'gz_args': ['-r -v4 ', world], 'on_exit_shutdown': 'true'}.items()
     )
 
-    # Spawn the robot in Gazebo
-    spawn_entity = Node(
-        package='ros_gz_sim',
-        executable='create',
+    spawn_entity = Node(package='ros_gz_sim', executable='create',
+                        arguments=['-topic', 'robot_description',
+                                   '-name', 'Elkapod',
+                                   '-z', '0.1'],
+                        output='screen')
+
+    bridge_params = os.path.join(get_package_share_directory(robot_description_package), 'config', 'gz_bridge.yaml')
+    ros_gz_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
         arguments=[
-            '-name', 'my_robot',
-            '-topic', 'robot_description',
-            '-x', '0', '-y', '0', '-z', '0'
-        ],
-        output='screen'
+            '--ros-args',
+            '-p',
+            f'config_file:={bridge_params}',
+        ]
     )
+
+    joint_broad_spawner = TimerAction(period=5.0, actions=[Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_state_broadcaster"],
+    )])
+
+
+
+    joint_position_controller_spawner = TimerAction(period=5.0, actions=[Node(
+                package="controller_manager",
+                executable="spawner",
+                arguments=["joint_position_controller"],
+            )])
 
     return LaunchDescription([
         SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', os.path.dirname(get_package_share_directory(robot_description_package))),
-        gz_proc,
+        rsp,
         world_arg,
-        robot_state_publisher,
+        gazebo,
         spawn_entity,
+        joint_broad_spawner,
+        joint_position_controller_spawner,
+        ros_gz_bridge,
     ])
