@@ -1,7 +1,7 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, SetEnvironmentVariable, IncludeLaunchDescription, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, TextSubstitution
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 import os
@@ -9,8 +9,15 @@ import os
 def generate_launch_description():
     robot_description_package = 'elkapod_description'
     elkapod_core = "elkapod_core_bringup"
-
     package_name = 'elkapod_gazebo'
+
+    desc_share = os.path.dirname(get_package_share_directory('elkapod_description'))
+    gazebo_share = os.path.join(
+        os.path.dirname(get_package_share_directory('elkapod_gazebo')),
+        'elkapod_gazebo', 'models'
+    )
+
+    gz_resource = f"{desc_share}:{gazebo_share}"
 
     rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
@@ -70,7 +77,10 @@ def generate_launch_description():
             )])
 
     return LaunchDescription([
-        SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', os.path.dirname(get_package_share_directory(robot_description_package))),
+            SetEnvironmentVariable(
+            name='GZ_SIM_RESOURCE_PATH',
+            value=gz_resource
+        ),
         rsp,
         world_arg,
         gazebo,
