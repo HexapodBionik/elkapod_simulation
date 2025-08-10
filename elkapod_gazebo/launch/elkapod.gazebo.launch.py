@@ -22,7 +22,7 @@ def generate_launch_description():
     rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory(elkapod_core), 'launch', 'rsp.launch.py'
-        )]), launch_arguments={'use_sim_time': 'true', 'use_ros2_control': 'true'}.items()
+        )]), launch_arguments={'sim_mode': 'true'}.items()
     )
 
     default_world = os.path.join(
