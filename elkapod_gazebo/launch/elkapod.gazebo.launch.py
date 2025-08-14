@@ -42,14 +42,16 @@ def generate_launch_description():
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')]),
-        launch_arguments={'gz_args': ['-r -v4 ', world], 'on_exit_shutdown': 'true'}.items()
+        launch_arguments={'gz_args': ['-r -v4 ', world], 'on_exit_shutdown': 'true', "emulate_tty": 'true'}.items()
     )
 
     spawn_entity = Node(package='ros_gz_sim', executable='create',
                         arguments=['-topic', 'robot_description',
                                    '-name', 'Elkapod',
                                    '-z', '0.1'],
-                        output='screen')
+                        output='screen',
+                        emulate_tty=True
+                        )
 
     bridge_params = os.path.join(get_package_share_directory(robot_description_package), 'config', 'gz_bridge.yaml')
     ros_gz_bridge = Node(
@@ -59,22 +61,26 @@ def generate_launch_description():
             '--ros-args',
             '-p',
             f'config_file:={bridge_params}',
-        ]
+        ],
+        output='screen',
+        emulate_tty=True
     )
 
     joint_broad_spawner = TimerAction(period=5.0, actions=[Node(
         package="controller_manager",
         executable="spawner",
         arguments=["joint_state_broadcaster"],
+        output='screen',
+        emulate_tty=True
     )])
 
-
-
     joint_position_controller_spawner = TimerAction(period=5.0, actions=[Node(
-                package="controller_manager",
-                executable="spawner",
-                arguments=["joint_position_controller"],
-            )])
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_position_controller"],
+        output='screen',
+        emulate_tty=True
+    )])
 
     return LaunchDescription([
             SetEnvironmentVariable(
