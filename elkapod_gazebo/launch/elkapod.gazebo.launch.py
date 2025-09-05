@@ -82,14 +82,6 @@ def generate_launch_description():
         emulate_tty=True
     )])
 
-    joint_position_controller_spawner = TimerAction(period=5.0, actions=[Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["passthrough_controller"],
-        output='screen',
-        emulate_tty=True
-    )])
-
     return LaunchDescription([
             SetEnvironmentVariable(
             name='GZ_SIM_RESOURCE_PATH',
@@ -100,7 +92,6 @@ def generate_launch_description():
         gazebo,
         spawn_entity,
         joint_broad_spawner,
-        joint_position_controller_spawner,
         elkapod_ik_controller_spawner,
         ros_gz_bridge,
     ])

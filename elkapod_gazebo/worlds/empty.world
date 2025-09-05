@@ -4,7 +4,7 @@
 
   <world name="empty">
 
-    <physics name="1ms" type="ignored"> # można zmienić np. na Ode
+    <physics name="1ms" type="ode"> # można zmienić np. na Ode
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
     </physics>
