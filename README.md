@@ -4,9 +4,9 @@
 ![Python Version](https://img.shields.io/badge/python-3.10-g.svg)
 
 ## Avaliable worlds
-Currently 3 worlds are avaliable and are specified using *world* launch argument. <br>
+Currently 4 worlds are avaliable and are specified using *world* launch argument. <br>
 ```
-world:={empty | bookstore | small_house}
+world:={empty | bookstore | small_house | warehouse}
 ```
 ## Installation
 1. Create a workspace and clone packages into it
