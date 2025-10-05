@@ -3,6 +3,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Python Version](https://img.shields.io/badge/python-3.10-g.svg)
 
+## Avaliable worlds
+Currently 3 worlds are avaliable and are specified using *world* launch argument. <br>
+```
+world:={empty | bookstore | small_house}
+```
 ## Installation
 1. Create a workspace and clone packages into it
 ```bash
@@ -38,3 +43,5 @@ ros2 launch elkapod_core_bringup elkapod_core_bringup.launch.py sim:=True world:
 
 ## How to control the robot?
 Create separate workspace and follow instructions from [ElkapodTeleop](https://github.com/HexapodBionik/elkapod_teleop.git).
+
+
