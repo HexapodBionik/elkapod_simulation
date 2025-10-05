@@ -55,6 +55,8 @@ def launch_setup(context: LaunchContext, *args, **kwargs):
                 elkapod_core), 'launch', 'rsp.launch.py'
         )]), launch_arguments={'sim_mode': 'true'}.items()
     )
+    avaliable_worlds = {world for world in next(os.walk(worlds_directory))[1]}
+    avaliable_worlds.add('empty')
 
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
