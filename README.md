@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Python Version](https://img.shields.io/badge/python-3.10-g.svg)
 
+
 ## Installation
 1. Create a workspace and clone packages into it
 ```bash
@@ -23,18 +24,21 @@ vcs import . < repos.yaml
 First of all you have to run launch from the `elkapod_core_bringup`.
 
 ```bash
-ros2 launch elkapod_core_bringup elkapod_core_bringup.launch.py sim:=True
+ros2 launch elkapod_core_bringup elkapod_core_bringup_sim.launch.py
 ```
-
-Currently, there are two different world to choose from:
-- `flat_world.wbt` - Flat world with ramp, stairs and traffic cones.
-- `uneven_terrain.wbt` - World with randomly uneven terrain.
+### Avaliable worlds
+Currently 4 worlds are avaliable and are specified using *world* launch argument. <br>
+```
+world:={empty | bookstore | small_house | warehouse}
+```
 
 To choose the world you want to run the simulation pass the world as a launchfile argument. Here is an example:
 
 ```bash
-ros2 launch elkapod_core_bringup elkapod_core_bringup.launch.py sim:=True world:="flat_world.wbt"
+ros2 launch elkapod_core_bringup elkapod_core_bringup_sim.launch.py world:=empty
 ```
 
 ## How to control the robot?
 Create separate workspace and follow instructions from [ElkapodTeleop](https://github.com/HexapodBionik/elkapod_teleop.git).
+
+
