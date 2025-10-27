@@ -58,11 +58,17 @@ def launch_setup(context: LaunchContext, *args, **kwargs):
     avaliable_worlds = {world for world in next(os.walk(worlds_directory))[1]}
     avaliable_worlds.add('empty')
 
+    gazebo_headless_mode = LaunchConfiguration('headless').perform(context)
+    print(gazebo_headless_mode, type(gazebo_headless_mode))
+    gazebo_headless_mode = gazebo_headless_mode == 'true' or gazebo_headless_mode == "True"
+
+    gazebo_mode = '-s ' if gazebo_headless_mode else ''
+
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
             get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')]),
         launch_arguments={'gz_args': [
-            '-r -v4 ', world_file], 'on_exit_shutdown': 'true', "emulate_tty": 'true'}.items()
+            '-r -v4 ' + gazebo_mode, world_file], 'on_exit_shutdown': 'true', "emulate_tty": 'true'}.items()
     )
 
     spawn_entity = Node(package='ros_gz_sim', executable='create',
@@ -87,7 +93,7 @@ def launch_setup(context: LaunchContext, *args, **kwargs):
         emulate_tty=True
     )
 
-    joint_broad_spawner = TimerAction(period=5.0, actions=[Node(
+    joint_broad_spawner = TimerAction(period=10.0, actions=[Node(
         package="controller_manager",
         executable="spawner",
         arguments=["joint_state_broadcaster"],
@@ -105,7 +111,7 @@ def launch_setup(context: LaunchContext, *args, **kwargs):
 
     # gz_resource = f"{desc_share}:{world_dir}:{media_dir}:{gazebo_models_share}"
     gz_resource = f"{desc_share}:{world_dir}:{gazebo_models_share}"
-    
+
     gz_environment = SetEnvironmentVariable(
         name='GZ_SIM_RESOURCE_PATH',
         value=gz_resource
@@ -128,5 +134,12 @@ def generate_launch_description():
             default_value='empty',
             description='World to load'
         ),
+
+        DeclareLaunchArgument(
+            'headless',
+            default_value='false',
+            description='To open gazebo sim in headless mode, less ressource demanding'
+        ),
+
         OpaqueFunction(function=launch_setup),
     ])
