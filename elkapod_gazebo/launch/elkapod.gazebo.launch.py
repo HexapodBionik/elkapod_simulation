@@ -59,7 +59,6 @@ def launch_setup(context: LaunchContext, *args, **kwargs):
     avaliable_worlds.add('empty')
 
     gazebo_headless_mode = LaunchConfiguration('headless').perform(context)
-    print(gazebo_headless_mode, type(gazebo_headless_mode))
     gazebo_headless_mode = gazebo_headless_mode == 'true' or gazebo_headless_mode == "True"
 
     gazebo_mode = '-s ' if gazebo_headless_mode else ''
@@ -109,7 +108,6 @@ def launch_setup(context: LaunchContext, *args, **kwargs):
         emulate_tty=True
     )])
 
-    # gz_resource = f"{desc_share}:{world_dir}:{media_dir}:{gazebo_models_share}"
     gz_resource = f"{desc_share}:{world_dir}:{gazebo_models_share}"
 
     gz_environment = SetEnvironmentVariable(
