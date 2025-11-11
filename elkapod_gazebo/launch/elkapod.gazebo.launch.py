@@ -1,7 +1,7 @@
 from launch import LaunchDescription, LaunchContext
-from launch.actions import DeclareLaunchArgument, SetEnvironmentVariable, IncludeLaunchDescription, TimerAction, OpaqueFunction
+from launch.actions import DeclareLaunchArgument, SetEnvironmentVariable, IncludeLaunchDescription, OpaqueFunction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, TextSubstitution
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 import os
@@ -49,12 +49,6 @@ def launch_setup(context: LaunchContext, *args, **kwargs):
     desc_share = os.path.dirname(
         get_package_share_directory('elkapod_description'))
 
-    rsp = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory(
-                elkapod_core), 'launch', 'rsp.launch.py'
-        )]), launch_arguments={'sim_mode': 'true'}.items()
-    )
     avaliable_worlds = {world for world in next(os.walk(worlds_directory))[1]}
     avaliable_worlds.add('empty')
 
@@ -92,22 +86,6 @@ def launch_setup(context: LaunchContext, *args, **kwargs):
         emulate_tty=True
     )
 
-    joint_broad_spawner = TimerAction(period=10.0, actions=[Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["joint_state_broadcaster"],
-        output='screen',
-        emulate_tty=True
-    )])
-
-    elkapod_ik_controller_spawner = TimerAction(period=8.0, actions=[Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["elkapod_ik_controller"],
-        output='screen',
-        emulate_tty=True
-    )])
-
     gz_resource = f"{desc_share}:{world_dir}:{gazebo_models_share}"
 
     gz_environment = SetEnvironmentVariable(
@@ -116,10 +94,7 @@ def launch_setup(context: LaunchContext, *args, **kwargs):
     )
     return [
         gz_environment,
-        rsp,
         spawn_entity,
-        joint_broad_spawner,
-        elkapod_ik_controller_spawner,
         gazebo,
         ros_gz_bridge,
     ]
