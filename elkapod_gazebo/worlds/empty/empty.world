@@ -1,0 +1,81 @@
+<sdf version="1.6">
+
+
+
+  <world name="empty">
+
+    <physics name="ode_tuned" type="ode">
+      <max_step_size>0.001</max_step_size>           
+      <real_time_factor>1.0</real_time_factor>
+      <ode>
+        <solver>
+          <type>world</type>                          
+          <iters>200</iters>                         
+          <sor>1.3</sor>                              
+        </solver>
+        <constraints>
+          <cfm>1e-6</cfm>                             
+          <erp>0.2</erp>                              
+        </constraints>
+      </ode>
+    </physics>
+    <plugin
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin
+      filename="gz-sim-contact-system"
+      name="gz::sim::systems::Contact">
+    </plugin>
+    <plugin filename="gz-sim-forcetorque-system" name="gz::sim::systems::ForceTorque"/>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 70 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- Base -->
+    <include>
+      <uri>model://asphalt_ground_plane</uri>
+      <name>ground</name>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+    <!-- Walls -->
+    <include>
+      <uri>model://walls_with_one_room</uri>
+      <name>walls</name>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+
+    <gui fullscreen="0">
+      <geometry>
+        <width>1920</width>
+        <height>1080</height>
+      </geometry>
+    </gui>
+  </world>
+</sdf>

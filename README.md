@@ -1,40 +1,35 @@
 # Elkapod simulation repository
-![ROS2 distro](https://img.shields.io/badge/ros--version-humble-blue)
+![ROS2 distro](https://img.shields.io/badge/ros--version-jazzy-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Python Version](https://img.shields.io/badge/python-3.10-g.svg)
+![Python Version](https://img.shields.io/badge/python-3.12-g.svg)
 
-## Installation
-1. Create a workspace and clone packages into it
-```bash
-mkdir -p elkapod_sim/src/
-git clone https://github.com/HexapodBionik/elkapod_simulation.git elkapod_sim/src/
-```
-2. Move into `src/` folder and download all additional packages using [vcstool](http://wiki.ros.org/vcstool)
-```bash
-cd elkapod_sim/src/
-vcs import . < repos.yaml
-```
+## About
+This repository contains ROS2 packages used for simulation of Elkapod walking robot. Currently supported simulators are:
+- **Gazebo Harmonic** [8.x.x] (Primary)
+
 > [!IMPORTANT]
-> 
-> Additionally, you need to install the ElkapodAlgorithms Python package. For more instructions, visit the package's [website](https://github.com/HexapodBionik/ElkapodAlgorithms.git).
+>
+> This repository is a component of the **Elkapod robot stack** It is designed to be used within a workspace managed by [elkapod_stack](https://github.com/HexapodBionik/elkapod_stack).
+> To set up the full simulation environment (including the robot description and controllers), follow the instructions from the stack repository.
 >
 
-## How to run the simulation?
-First of all you have to run launch from the `elkapod_core_bringup`.
+> [!CAUTION]
+>
+> This repository does not contain the URDF/Xacro files. It relies on the `elkapod_description` package found in `elkapod_core` repository. Ensure both are in your colcon workspace before building.
+>
 
+## Prerequisites for Gazebo sim
+Before running the simulator check if those environment variables are set
 ```bash
-ros2 launch elkapod_core_bringup elkapod_core_bringup.launch.py sim:=True
+export GZ_SIM_RENDER_ENGINE=ogre2
+export GZ_PARTITION=elkapod_sim
+export GZ_IP=127.0.0.1
 ```
 
-Currently, there are two different world to choose from:
-- `flat_world.wbt` - Flat world with ramp, stairs and traffic cones.
-- `uneven_terrain.wbt` - World with randomly uneven terrain.
+Even though Gazebo can be used without GPU acceleration it is highly recommended to run it on PC with NVIDIA GPU. If it's not an option for you then you can run the simulation in **headless** mode with RViz only.
 
-To choose the world you want to run the simulation pass the world as a launchfile argument. Here is an example:
-
-```bash
-ros2 launch elkapod_core_bringup elkapod_core_bringup.launch.py sim:=True world:="flat_world.wbt"
+## Avaliable worlds
+Currently 4 worlds are avaliable and are specified using **world** launch argument. <br>
 ```
-
-## How to control the robot?
-Create separate workspace and follow instructions from [ElkapodTeleop](https://github.com/HexapodBionik/elkapod_teleop.git).
+world:={empty | bookstore | small_house | warehouse}
+```
